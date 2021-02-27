@@ -1,0 +1,6 @@
+﻿CREATE PROCEDURE [dbo].[GetAllRoles]
+	
+AS
+BEGIN
+	SELECT * FROM [Roles]
+END
