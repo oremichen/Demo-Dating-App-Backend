@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using EmployeeManagement.Api.Middleware;
 using EmployeeManagement.AppService;
 using EmployeeManagement.AppService.AutoMapper;
 using EmployeeManagement.Repository;
@@ -81,10 +82,13 @@ namespace EmployeeManagement.Api
         {
 
             app.UseCors(localhost);
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
 
