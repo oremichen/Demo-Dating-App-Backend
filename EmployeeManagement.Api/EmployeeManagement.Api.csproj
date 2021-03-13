@@ -19,5 +19,9 @@
     <ProjectReference Include="..\EmployeeManagement.Repository\EmployeeManagement.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middleware\" />
+  </ItemGroup>
+
 
 </Project>
