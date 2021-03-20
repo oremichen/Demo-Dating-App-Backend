@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EmployeeManagement.Core.Api.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -21,5 +22,10 @@ namespace EmployeeManagement.Core
         public string Interests { get; set; }
         public string City { get; set; }
         public ICollection<Photo> Photos { get; set; }
+
+        public int GetAge()
+        {
+            return DateOfBirth.CalculateAge();
+        }
     }
 }
