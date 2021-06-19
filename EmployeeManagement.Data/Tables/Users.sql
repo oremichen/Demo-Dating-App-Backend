@@ -13,5 +13,6 @@
     [Introduction] NVARCHAR(MAX) Null,
     [LookingFor] NVARCHAR(MAX) Null,
     [Interests] NVARCHAR(MAX) Null,
-    [City] NVARCHAR(MAX) Null
+    [City] NVARCHAR(MAX) Null,
+    [Photos] NV
 )

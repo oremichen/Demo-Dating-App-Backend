@@ -57,6 +57,8 @@ namespace EmployeeManagement.Repository.RegisterRepository
             }
         }
 
+
+
         public async Task<Registration> GetRegisteredUserByEmail(string email)
         {
             using (var conn = Connection)
