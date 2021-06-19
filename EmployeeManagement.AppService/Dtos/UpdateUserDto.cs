@@ -3,16 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EmployeeManagement.Core
+namespace EmployeeManagement.AppService.Dtos
 {
-    public class Users
+    public class UpdateUserDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public string PasswordHash { get; set; }
-        public string PasswordSalt { get; set; }
-        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateCreated { get; set; }
+
         public DateTime DateOfBirth { get; set; }
         public string KnownAs { get; set; }
         public DateTime LastAcvtive { get; set; } = DateTime.Now;
@@ -22,7 +21,8 @@ namespace EmployeeManagement.Core
         public string Interests { get; set; }
         public string City { get; set; }
 
-        //   public ICollection<Photo> Photo { get; set; }
+
+        public List<PhotoDto> Photo { get; set; }
 
         public int Age
         {

@@ -7,6 +7,7 @@
     [PasswordSalt] NVARCHAR(MAX) NULL,
     [DateCreated] DATETIME2 NULL,
     [DateOfBirth] DATETIME2 NULL,
+    [Age] int Null,
     [KnownAs] NVARCHAR(MAX) Null,
     [LastAcvtive] NVARCHAR(MAX) Null,
     [Gender] NVARCHAR(3) Null,
@@ -14,5 +15,5 @@
     [LookingFor] NVARCHAR(MAX) Null,
     [Interests] NVARCHAR(MAX) Null,
     [City] NVARCHAR(MAX) Null,
-    [Photos] NV
+  
 )

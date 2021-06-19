@@ -7,5 +7,6 @@
     [Password] NVARCHAR(50) NOT NULL, 
     [DateCreated] DATETIME2 NOT NULL,
     [DateOfBirth] DATETIME2 NOT NULL,
-    [Gender] nvarchar(10) NOT NULL
+    [Gender] nvarchar(10) NOT NULL, 
+    [Photos] NCHAR(10) NULL
 )

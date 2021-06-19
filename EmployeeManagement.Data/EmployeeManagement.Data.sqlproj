@@ -79,6 +79,7 @@
     <Build Include="StoredProcedures\Users\GetAllUsers.sql" />
     <Build Include="StoredProcedures\Users\GetUserById.sql" />
     <Build Include="StoredProcedures\Users\GetUserByEmail.sql" />
+    <Build Include="Tables\Photos.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="EmployeeManagement.Data.refactorlog" />
