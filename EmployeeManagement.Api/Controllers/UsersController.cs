@@ -43,6 +43,7 @@ namespace EmployeeManagement.Api.Controllers
         {
             try
             {
+
                 if (!ModelState.IsValid)
                 {
                     throw new ArgumentException("Invalid model");
