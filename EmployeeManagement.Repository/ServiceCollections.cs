@@ -2,6 +2,7 @@
 using EmployeeManagement.Repository.RoleRepository;
 using EmployeeManagement.Repository.UserRepository;
 using Microsoft.Extensions.DependencyInjection;
+using NetCore.AutoRegisterDi;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,12 +11,10 @@ namespace EmployeeManagement.Repository
 {
     public static class ServiceCollections
     {
-        public static IServiceCollection AddRepoServices(this IServiceCollection services)
+        public static void AddRepoServices(this IServiceCollection services)
         {
-            services.AddTransient<IRoleRepo, RoleRepo>();
-            services.AddTransient<IRegistrationRepo, RegistrationRepo>();
-            services.AddTransient<IUserRepo, UserRepo>();
-            return services;
+            services.RegisterAssemblyPublicNonGenericClasses()
+          .AsPublicImplementedInterfaces();
         }
     }
 }
