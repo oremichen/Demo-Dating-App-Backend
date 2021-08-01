@@ -1,10 +1,14 @@
-﻿using System;
+﻿using EmployeeManagement.AppService.Dtos;
+using EmployeeManagement.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace EmployeeManagement.AppService.PhotoAppService
 {
-    class IPhotoService
+    public interface IPhotoService
     {
+        IEnumerable<PhotoDto> GetUserPhotos(int userId);
     }
 }

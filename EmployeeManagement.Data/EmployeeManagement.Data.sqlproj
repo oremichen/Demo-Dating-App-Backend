@@ -61,6 +61,7 @@
     <Folder Include="StoredProcedures\Roles" />
     <Folder Include="StoredProcedures\Registration" />
     <Folder Include="StoredProcedures\Users" />
+    <Folder Include="StoredProcedures\Photos" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Roles.sql" />
@@ -80,6 +81,7 @@
     <Build Include="StoredProcedures\Users\GetUserById.sql" />
     <Build Include="StoredProcedures\Users\GetUserByEmail.sql" />
     <Build Include="Tables\Photos.sql" />
+    <Build Include="StoredProcedures\Photos\GetPhotosByUserId.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="EmployeeManagement.Data.refactorlog" />

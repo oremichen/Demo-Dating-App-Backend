@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using EmployeeManagement.AppService.Dtos;
 using EmployeeManagement.AppService.PasswordHelper;
+using EmployeeManagement.AppService.PhotoAppService;
 using EmployeeManagement.AppService.TokenService;
 using EmployeeManagement.Core;
+using EmployeeManagement.Repository.PhotoRepository;
 using EmployeeManagement.Repository.UserRepository;
 using System;
 using System.Collections.Generic;
@@ -18,12 +20,14 @@ namespace EmployeeManagement.AppService.UsersAppServices
         private readonly IUserRepo _userRepo;
         private readonly IMapper _mapper;
         private readonly ITokenServices _tokenServices;
+        private readonly IPhotoService _photoService;
 
-        public UserAppService(IUserRepo userRepo, IMapper mapper, ITokenServices tokenServices)
+        public UserAppService(IUserRepo userRepo, IMapper mapper, ITokenServices tokenServices, IPhotoService photoService)
         {
             _userRepo = userRepo;
             _tokenServices = tokenServices;
             _mapper = mapper;
+            _photoService = photoService;
         }
 
         public async Task<UserDto> CreateUsers(CreateUsersDto user)
@@ -66,7 +70,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
             {
                 var userList = await _userRepo.GetAllUsers();
 
-                var ListResults = userList.AsQueryable().Select(s => new Members
+                var listResults = userList.AsQueryable().Select(s => new Members
                 {
                     Id = s.Id,
                     Name = s.Name,
@@ -81,11 +85,11 @@ namespace EmployeeManagement.AppService.UsersAppServices
                     KnownAs = s.KnownAs,
                     LastAcvtive = s.LastAcvtive,
                     LookingFor = s.LookingFor,
+                    Photo =  _photoService.GetUserPhotos(s.Id).ToList(),
                     
-
                 }).ToList();
 
-                return ListResults;
+                return listResults;
             }
             catch (Exception ex)
             {
@@ -126,5 +130,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
                 throw ex;
             }
         }
+
+
     }
 }

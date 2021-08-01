@@ -62,7 +62,23 @@ namespace EmployeeManagement.Api.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("UpdateUser")]
+        [Produces(typeof(Response))]
+        public async Task<IActionResult> UpdateUser([FromBody] CreateUsersDto model)
+        {
+            try
+            {
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         [HttpGet]
+        [Authorize]
         [Route("GetAllUsers")]
         [Produces(typeof(List<Members>))]
         public async Task<IActionResult> GetAllUsers()
