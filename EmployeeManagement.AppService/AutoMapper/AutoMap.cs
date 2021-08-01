@@ -13,8 +13,8 @@ namespace EmployeeManagement.AppService.AutoMapper
         {
             CreateMap<CreateRolesDto, Roles>();
             CreateMap<RegistrationDto, Registration>();
-            CreateMap<Users, UsersDto>();
-            CreateMap<List<Users>, List<UsersDto>>();
+            CreateMap<Users, Members>();
+            CreateMap<List<Users>, List<Members>>();
             CreateMap<Users, CreateUsersDto>();
         }
     }

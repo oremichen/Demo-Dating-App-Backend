@@ -60,18 +60,28 @@ namespace EmployeeManagement.AppService.UsersAppServices
             }
         }
 
-        public async Task<IEnumerable<UsersDto>> GetAllUsers()
+        public async Task<IEnumerable<Members>> GetAllUsers()
         {
             try
             {
                 var userList = await _userRepo.GetAllUsers();
 
-                var ListResults = userList.AsQueryable().Select(s => new UsersDto
+                var ListResults = userList.AsQueryable().Select(s => new Members
                 {
                     Id = s.Id,
                     Name = s.Name,
                     Email = s.Email,
-                    DateCreated = s.DateCreated
+                    DateCreated = s.DateCreated,
+                    Age = s.Age,
+                    City = s.City,
+                    DateOfBirth = s.DateOfBirth,
+                    Gender = s.Gender,
+                    Interests = s.Interests,
+                    Introduction = s.Introduction,
+                    KnownAs = s.KnownAs,
+                    LastAcvtive = s.LastAcvtive,
+                    LookingFor = s.LookingFor,
+                    
 
                 }).ToList();
 
@@ -83,13 +93,13 @@ namespace EmployeeManagement.AppService.UsersAppServices
             }
         }
 
-        public async Task<UsersDto> GetUsersById(int id)
+        public async Task<Members> GetUsersById(int id)
         {
             try
             {
                 var result = await _userRepo.GetUsersById(id);
 
-                var user = _mapper.Map<UsersDto>(result);
+                var user = _mapper.Map<Members>(result);
                 return user;
             }
             catch (Exception ex)

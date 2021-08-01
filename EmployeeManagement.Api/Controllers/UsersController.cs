@@ -64,7 +64,7 @@ namespace EmployeeManagement.Api.Controllers
 
         [HttpGet]
         [Route("GetAllUsers")]
-        [Produces(typeof(List<UsersDto>))]
+        [Produces(typeof(List<Members>))]
         public async Task<IActionResult> GetAllUsers()
         {
             try
@@ -82,7 +82,7 @@ namespace EmployeeManagement.Api.Controllers
         [HttpGet]
         [Authorize]
         [Route("GetUserById")]
-        [Produces(typeof(UsersDto))]
+        [Produces(typeof(Members))]
         public async Task<IActionResult> GetUserById([FromQuery]int id)
         {
             try
