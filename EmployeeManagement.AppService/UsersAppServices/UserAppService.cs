@@ -159,6 +159,9 @@ namespace EmployeeManagement.AppService.UsersAppServices
                     };
 
                     updateUser = await _userRepo.UpdateUsers(user);
+
+                    //insert user photos
+                    await _photoService.InsertUserPhotos(member);
                 }
                 else
                 {

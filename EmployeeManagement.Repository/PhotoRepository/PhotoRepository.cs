@@ -47,10 +47,9 @@ namespace EmployeeManagement.Repository.PhotoRepository
             {
                 foreach (var photo in photos)
                 {
-                    var sql = $"[dbo].[InsertPhotos] @photoId, @url, @ismain, @publicId, @userId";
+                    var sql = $"[dbo].[InsertPhotos] @url, @ismain, @publicId, @userId";
                     var result = await conn.ExecuteScalarAsync<long>(sql, new
                     {
-                        photo.PhotoId,
                         photo.IsMain,
                         photo.Url,
                         photo.UserId,

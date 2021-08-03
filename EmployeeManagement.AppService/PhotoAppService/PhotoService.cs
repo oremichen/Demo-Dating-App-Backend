@@ -26,9 +26,7 @@ namespace EmployeeManagement.AppService.PhotoAppService
                 var photos =  _photoRepository.GetUserPhotos(userId);
                 foreach (var photo in photos)
                 {
-                    photoDto.Id = photo.Id;
                     photo.IsMain = photo.IsMain;
-                    photo.PhotoId = photo.PhotoId;
                     photo.PublicId = photo.PublicId;
                     photo.Url = photo.Url;
 
@@ -36,6 +34,37 @@ namespace EmployeeManagement.AppService.PhotoAppService
                 }
 
                 return photoDtos;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task InsertUserPhotos(MembersDto model)
+        {
+            try
+            {
+                var photos = new List<Photos>();
+                var photo = new Photos();
+
+                if (model.Photo.Count > 0)
+                {
+                    foreach (var itemPhoto in model.Photo)
+                    {
+                        photo.IsMain = itemPhoto.IsMain;
+                        photo.PublicId = itemPhoto.PublicId;
+                        photo.Url = itemPhoto.Url;
+                        photo.UserId = model.Id;
+
+                        photos.Add(photo);
+
+                    }
+
+                    await _photoRepository.InsertPhotos(photos);
+                }
+               
+
             }
             catch (Exception ex)
             {
