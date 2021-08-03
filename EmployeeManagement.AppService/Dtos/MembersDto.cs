@@ -21,7 +21,7 @@ namespace EmployeeManagement.AppService.Dtos
 
         public int Age { get; set; }
 
-        public List<PhotoDto> Photo { get; set; }
+        public List<CreatePhoto> Photo { get; set; }
 
     }
 }

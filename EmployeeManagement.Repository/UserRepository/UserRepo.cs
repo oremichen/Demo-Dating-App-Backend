@@ -75,5 +75,10 @@ namespace EmployeeManagement.Repository.UserRepository
                 return result;
             }
         }
+
+        public Task UpdateUsers(Users user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

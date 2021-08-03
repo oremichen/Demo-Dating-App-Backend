@@ -40,5 +40,19 @@ namespace EmployeeManagement.Repository.PhotoRepository
                 return result;
             }
         }
+
+        public IEnumerable<Photos> InsertPhotos(int userId)
+        {
+            using (var conn = Connection)
+            {
+                var sql = $"[dbo].[GetPhotosByUserId] @userId";
+                var result = conn.Query<Photos>(sql, new
+                {
+                    userId
+                });
+
+                return result;
+            }
+        }
     }
 }
