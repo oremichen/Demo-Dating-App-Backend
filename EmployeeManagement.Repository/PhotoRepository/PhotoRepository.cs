@@ -41,18 +41,29 @@ namespace EmployeeManagement.Repository.PhotoRepository
             }
         }
 
-        public IEnumerable<Photos> InsertPhotos(int userId)
+        public async Task InsertPhotos(List<Photos> photos)
         {
             using (var conn = Connection)
             {
-                var sql = $"[dbo].[GetPhotosByUserId] @userId";
-                var result = conn.Query<Photos>(sql, new
+                foreach (var photo in photos)
                 {
-                    userId
-                });
+                    var sql = $"[dbo].[InsertPhotos] @photoId, @url, @ismain, @publicId, @userId";
+                    var result = await conn.ExecuteScalarAsync<long>(sql, new
+                    {
+                        photo.PhotoId,
+                        photo.IsMain,
+                        photo.Url,
+                        photo.UserId,
+                        photo.PublicId
+                    });
+                   
+                }
 
-                return result;
+               await  Task.CompletedTask;
+               
             }
         }
+
+      
     }
 }

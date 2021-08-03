@@ -9,5 +9,7 @@ namespace EmployeeManagement.Repository.PhotoRepository
     public interface IPhotoRepository
     {
         IEnumerable<Photos> GetUserPhotos(int userId);
+
+        Task InsertPhotos(List<Photos> photos);
     }
 }

@@ -131,6 +131,46 @@ namespace EmployeeManagement.AppService.UsersAppServices
             }
         }
 
+        public async Task<Users> UpdateUser(MembersDto member)
+        {
+            try
+            {
+                var updateUser = new Users();
 
+                var getUser = await _userRepo.GetUsersById(member.Id);
+                if (getUser != null)
+                {
+                    var user = new Users()
+                    {
+                        Id = getUser.Id,
+                        DateCreated = DateTime.Now,
+                        DateOfBirth = member.DateOfBirth,
+                        City = member.City,
+                        Email = getUser.Email,
+                        Gender = member.Gender,
+                        Interests = member.Interests,
+                        Introduction = member.Introduction,
+                        KnownAs = member.KnownAs,
+                        LastAcvtive = DateTime.Now,
+                        LookingFor = member.LookingFor,
+                        Name = member.Name,
+                        PasswordHash = getUser.PasswordHash,
+                        PasswordSalt = getUser.PasswordSalt
+                    };
+
+                    updateUser = await _userRepo.UpdateUsers(user);
+                }
+                else
+                {
+                    updateUser = null;
+                }
+
+                return updateUser;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

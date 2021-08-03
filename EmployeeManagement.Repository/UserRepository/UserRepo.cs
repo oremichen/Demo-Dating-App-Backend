@@ -76,9 +76,33 @@ namespace EmployeeManagement.Repository.UserRepository
             }
         }
 
-        public Task UpdateUsers(Users user)
+        public async Task<Users> UpdateUsers(Users model)
         {
-            throw new NotImplementedException();
+            using (var conn = Connection)
+            {
+                var sql = $"[dbo].[UpdateUsers] @id, @name, @email, @passwordHash, @passwordSalt, @datecreated, @dateofbirth" +
+                    $"@knownas, @lastactive, @gender, @introduction, @lookingfor, @interests, @city, @age";
+                var result = await conn.ExecuteScalarAsync<Users>(sql, new
+                {
+                    model.Name,
+                    model.Email,
+                    model.PasswordHash,
+                    model.PasswordSalt,
+                    model.DateCreated,
+                    model.DateOfBirth,
+                    model.KnownAs,
+                    model.LastAcvtive,
+                    model.Gender,
+                    model.Introduction,
+                    model.LookingFor,
+                    model.Interests,
+                    model.City,
+                    model.Age
+                });
+
+                return result;
+            }
+
         }
     }
 }

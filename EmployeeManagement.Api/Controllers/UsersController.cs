@@ -69,7 +69,17 @@ namespace EmployeeManagement.Api.Controllers
         {
             try
             {
-                return Ok();
+                if (ModelState.IsValid)
+                {
+                    var updateUser = await _userAppService.UpdateUser(model);
+                    if (updateUser != null)
+                    {
+                        return Ok("Update successful");
+                    }
+                    return BadRequest("Update request failed");
+                }
+                return BadRequest("Model is invalid");
+               
             }
             catch (Exception e)
             {

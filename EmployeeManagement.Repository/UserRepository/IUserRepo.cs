@@ -9,7 +9,7 @@ namespace EmployeeManagement.Repository.UserRepository
     public interface IUserRepo
     {
         Task<long> CreateUsers(Users user);
-        Task UpdateUsers(Users user);
+        Task<Users> UpdateUsers(Users user);
         Task<IEnumerable<Users>> GetAllUsers();
         Task<Users> GetUsersById(int id);
         Task<Users> GetUserByEmail(string email);

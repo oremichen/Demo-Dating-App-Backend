@@ -1,4 +1,5 @@
 ﻿using EmployeeManagement.AppService.Dtos;
+using EmployeeManagement.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
     public interface IUserAppService
     {
         Task<UserDto> CreateUsers(CreateUsersDto user);
+        Task<Users> UpdateUser(MembersDto member);
         Task<IEnumerable<Members>> GetAllUsers();
         Task<Members> GetUsersById(int id);
         Task<bool> CheckIfNameExist(string email);
