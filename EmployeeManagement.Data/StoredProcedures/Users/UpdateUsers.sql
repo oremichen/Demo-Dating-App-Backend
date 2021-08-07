@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[UpdateUser]
+﻿CREATE PROCEDURE [dbo].[UpdateUsers]
 	@id int, 
 	@name nvarchar(50),
 	@email nvarchar(50), 
@@ -6,14 +6,14 @@
 	@passwordSalt nvarchar(MAX),
 	@datecreated datetime2(7), 
 	@dateofbirth datetime2(7),
-	@age int,
     @knownas nvarchar(MAX),
 	@lastactive nvarchar(MAX), 
 	@gender nvarchar(3), 
 	@introduction nvarchar(MAX), 
 	@lookingfor nvarchar(MAX), 
 	@interests nvarchar(MAX),
-	@city nvarchar(MAX)
+	@city nvarchar(MAX),
+	@age int
 AS
 	BEGIN 
 	UPDATE[dbo].[Users] SET
@@ -23,14 +23,17 @@ AS
 	[PasswordSalt] = @passwordSalt,
 	[DateCreated] = @datecreated,
 	[DateOfBirth] = @dateofbirth,
-	[Age] = @age,
 	[KnownAs] = @knownas,
-	[LastAcvtive] = @lastactive,
+	[LastActive] = @lastactive,
 	[Gender] = @gender,
 	[Introduction] = @introduction,
 	[LookingFor] = @lookingfor,
 	[Interests] = @interests,
-	[City] = @city
+	[City] = @city,
+	[Age] = @age
 
-WHERE [Id] = @id
+	output inserted.Name
+
+WHERE [Id] = @id;
+
 END

@@ -83,7 +83,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
                     Interests = s.Interests,
                     Introduction = s.Introduction,
                     KnownAs = s.KnownAs,
-                    LastAcvtive = s.LastAcvtive,
+                    LastAcvtive = s.LastActive,
                     LookingFor = s.LookingFor,
                     Photo =  _photoService.GetUserPhotos(s.Id).ToList(),
                     
@@ -151,7 +151,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
                         Interests = member.Interests,
                         Introduction = member.Introduction,
                         KnownAs = member.KnownAs,
-                        LastAcvtive = DateTime.Now,
+                        LastActive = DateTime.Now,
                         LookingFor = member.LookingFor,
                         Name = member.Name,
                         PasswordHash = getUser.PasswordHash,

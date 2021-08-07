@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using EmployeeManagement.Core;
+using EmployeeManagement.Repository.IStorage;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,12 @@ namespace EmployeeManagement.Repository.UserRepository
     public class UserRepo : IUserRepo
     {
         private readonly ConnectionStrings _appSettings;
-        public UserRepo(IOptions<ConnectionStrings> options)
+        private readonly IStorageRepo _storageRepo;
+
+        public UserRepo(IOptions<ConnectionStrings> options, IStorageRepo storageRepo)
         {
             _appSettings = options.Value;
+            _storageRepo = storageRepo;
         }
 
         public IDbConnection Connection
@@ -78,31 +82,33 @@ namespace EmployeeManagement.Repository.UserRepository
 
         public async Task<Users> UpdateUsers(Users model)
         {
-            using (var conn = Connection)
-            {
-                var sql = $"[dbo].[UpdateUsers] @id, @name, @email, @passwordHash, @passwordSalt, @datecreated, @dateofbirth" +
-                    $"@knownas, @lastactive, @gender, @introduction, @lookingfor, @interests, @city, @age";
-                var result = await conn.ExecuteScalarAsync<Users>(sql, new
+                using (var conn = Connection)
                 {
-                    model.Name,
-                    model.Email,
-                    model.PasswordHash,
-                    model.PasswordSalt,
-                    model.DateCreated,
-                    model.DateOfBirth,
-                    model.KnownAs,
-                    model.LastAcvtive,
-                    model.Gender,
-                    model.Introduction,
-                    model.LookingFor,
-                    model.Interests,
-                    model.City,
-                    model.Age
-                });
+                    var sql = $"[dbo].[UpdateUsers] @id, @name, @email, @passwordHash, @passwordSalt, @datecreated, @dateofbirth," +
+                        $"@knownas, @lastactive, @gender, @introduction, @lookingfor, @interests, @city, @age";
+                    var result = await conn.ExecuteScalarAsync<string>(sql, new
+                    {
+                        model.Id,
+                        model.Name,
+                        model.Email,
+                        model.PasswordHash,
+                        model.PasswordSalt,
+                        model.DateCreated,
+                        model.DateOfBirth,
+                        model.KnownAs,
+                        model.LastActive,
+                        model.Gender,
+                        model.Introduction,
+                        model.LookingFor,
+                        model.Interests,
+                        model.City,
+                        model.Age
+                    });
 
-                return result;
-            }
+                    return model;
+                }
 
+                       
         }
     }
 }

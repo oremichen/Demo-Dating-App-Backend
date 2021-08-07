@@ -50,10 +50,12 @@ namespace EmployeeManagement.Repository.PhotoRepository
                     var sql = $"[dbo].[InsertPhotos] @url, @ismain, @publicId, @userId";
                     var result = await conn.ExecuteScalarAsync<long>(sql, new
                     {
-                        photo.IsMain,
+                        
                         photo.Url,
-                        photo.UserId,
-                        photo.PublicId
+                        photo.IsMain,
+                        photo.PublicId,
+                        photo.UserId
+                       
                     });
                    
                 }
