@@ -18,27 +18,20 @@ namespace EmployeeManagement.AppService.PhotoAppService
 
         public IEnumerable<PhotoDto> GetUserPhotos(int userId)
         {
-            try
-            {
                 var photoDtos = new List<PhotoDto>();
                 var photoDto = new PhotoDto();
 
                 var photos =  _photoRepository.GetUserPhotos(userId);
                 foreach (var photo in photos)
                 {
-                    photo.IsMain = photo.IsMain;
-                    photo.PublicId = photo.PublicId;
-                    photo.Url = photo.Url;
+                    photoDto.IsMain = photo.IsMain;
+                    photoDto.PublicId = photo.PublicId;
+                    photoDto.Url = photo.Url;
 
                     photoDtos.Add(photoDto);
                 }
 
                 return photoDtos;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
         }
 
         public async Task InsertUserPhotos(MembersDto model)
