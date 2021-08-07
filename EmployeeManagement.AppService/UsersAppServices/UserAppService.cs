@@ -104,6 +104,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
                 var result = await _userRepo.GetUsersById(id);
 
                 var user = _mapper.Map<Members>(result);
+                user.Photo = _photoService.GetUserPhotos(id).ToList();
                 return user;
             }
             catch (Exception ex)

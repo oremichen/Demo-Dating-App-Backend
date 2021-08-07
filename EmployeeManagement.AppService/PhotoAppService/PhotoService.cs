@@ -19,14 +19,18 @@ namespace EmployeeManagement.AppService.PhotoAppService
         public IEnumerable<PhotoDto> GetUserPhotos(int userId)
         {
                 var photoDtos = new List<PhotoDto>();
-                var photoDto = new PhotoDto();
+               
 
                 var photos =  _photoRepository.GetUserPhotos(userId);
                 foreach (var photo in photos)
                 {
+                    var photoDto = new PhotoDto();
+
+                    photoDto.Id = photo.Id;
                     photoDto.IsMain = photo.IsMain;
                     photoDto.PublicId = photo.PublicId;
                     photoDto.Url = photo.Url;
+                    photoDto.UserId = photo.UserId;
 
                     photoDtos.Add(photoDto);
                 }
