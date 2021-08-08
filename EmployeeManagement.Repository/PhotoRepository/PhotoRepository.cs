@@ -27,6 +27,11 @@ namespace EmployeeManagement.Repository.PhotoRepository
             }
         }
 
+        public Task<Photos> GetMainPhotoByUserId(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
         public  IEnumerable<Photos> GetUserPhotos(int userId)
         {
             using (var conn = Connection)

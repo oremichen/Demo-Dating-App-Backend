@@ -11,5 +11,7 @@ namespace EmployeeManagement.Repository.PhotoRepository
         IEnumerable<Photos> GetUserPhotos(int userId);
 
         Task InsertPhotos(List<Photos> photos);
+
+        Task<Photos> GetMainPhotoByUserId(int userId);
     }
 }

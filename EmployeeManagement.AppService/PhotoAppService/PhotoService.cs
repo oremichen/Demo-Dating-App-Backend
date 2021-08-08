@@ -3,6 +3,7 @@ using EmployeeManagement.Core;
 using EmployeeManagement.Repository.PhotoRepository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,35 +39,36 @@ namespace EmployeeManagement.AppService.PhotoAppService
                 return photoDtos;
         }
 
+        public async Task<Photos> GetMainPhotoByUserId(int id)
+        {
+            var photos = _photoRepository.GetUserPhotos(id);
+            var getMainPhoto = photos.Where(r => r.IsMain == true).FirstOrDefault();
+            return await Task.FromResult(getMainPhoto);
+            
+        }
+
         public async Task InsertUserPhotos(MembersDto model)
         {
-            try
-            {
+           
                 var photos = new List<Photos>();
                 var photo = new Photos();
 
-                if (model.Photo.Count > 0)
-                {
-                    foreach (var itemPhoto in model.Photo)
-                    {
-                        photo.IsMain = itemPhoto.IsMain;
-                        photo.PublicId = itemPhoto.PublicId;
-                        photo.Url = itemPhoto.Url;
-                        photo.UserId = model.Id;
-
-                        photos.Add(photo);
-
-                    }
-
-                    await _photoRepository.InsertPhotos(photos);
-                }
-               
-
-            }
-            catch (Exception ex)
+            if (model.Photo.Count > 0)
             {
-                throw ex;
+                foreach (var itemPhoto in model.Photo)
+                {
+                    photo.IsMain = itemPhoto.IsMain;
+                    photo.PublicId = itemPhoto.PublicId;
+                    photo.Url = itemPhoto.Url;
+                    photo.UserId = model.Id;
+
+                    photos.Add(photo);
+
+                }
+
+                await _photoRepository.InsertPhotos(photos);
             }
+          
         }
     }
 }

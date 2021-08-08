@@ -85,6 +85,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
                     KnownAs = s.KnownAs,
                     LastAcvtive = s.LastActive,
                     LookingFor = s.LookingFor,
+                    PhotoUrl = GetPhotoUrl(s.Id),
                     Photo =  _photoService.GetUserPhotos(s.Id).ToList(),
                     
                 }).ToList();
@@ -134,47 +135,47 @@ namespace EmployeeManagement.AppService.UsersAppServices
 
         public async Task<Users> UpdateUser(MembersDto member)
         {
-            try
+            var updateUser = new Users();
+
+            var getUser = await _userRepo.GetUsersById(member.Id);
+            if (getUser != null)
             {
-                var updateUser = new Users();
-
-                var getUser = await _userRepo.GetUsersById(member.Id);
-                if (getUser != null)
+                var user = new Users()
                 {
-                    var user = new Users()
-                    {
-                        Id = getUser.Id,
-                        DateCreated = DateTime.Now,
-                        DateOfBirth = member.DateOfBirth,
-                        City = member.City,
-                        Email = getUser.Email,
-                        Gender = member.Gender,
-                        Interests = member.Interests,
-                        Introduction = member.Introduction,
-                        KnownAs = member.KnownAs,
-                        LastActive = DateTime.Now,
-                        LookingFor = member.LookingFor,
-                        Name = member.Name,
-                        PasswordHash = getUser.PasswordHash,
-                        PasswordSalt = getUser.PasswordSalt
-                    };
+                    Id = getUser.Id,
+                    DateCreated = DateTime.Now,
+                    DateOfBirth = member.DateOfBirth,
+                    City = member.City,
+                    Email = getUser.Email,
+                    Gender = member.Gender,
+                    Interests = member.Interests,
+                    Introduction = member.Introduction,
+                    KnownAs = member.KnownAs,
+                    LastActive = DateTime.Now,
+                    LookingFor = member.LookingFor,
+                    Name = member.Name,
+                    PasswordHash = getUser.PasswordHash,
+                    PasswordSalt = getUser.PasswordSalt
+                };
 
-                    updateUser = await _userRepo.UpdateUsers(user);
+                updateUser = await _userRepo.UpdateUsers(user);
 
-                    //insert user photos
-                    await _photoService.InsertUserPhotos(member);
-                }
-                else
-                {
-                    updateUser = null;
-                }
-
-                return updateUser;
+                //insert user photos
+                await _photoService.InsertUserPhotos(member);
             }
-            catch (Exception ex)
+            else
             {
-                throw ex;
+                updateUser = null;
             }
+
+            return updateUser;
+           
+        }
+
+        public string GetPhotoUrl(int id)
+        {
+            var photo = _photoService.GetMainPhotoByUserId(id);
+            return photo.Result.Url;
         }
     }
 }

@@ -10,6 +10,7 @@ namespace EmployeeManagement.AppService.PhotoAppService
     public interface IPhotoService
     {
         IEnumerable<PhotoDto> GetUserPhotos(int userId);
-       Task InsertUserPhotos(MembersDto model);
+        Task InsertUserPhotos(MembersDto model);
+        Task<Photos> GetMainPhotoByUserId(int id);
     }
 }
