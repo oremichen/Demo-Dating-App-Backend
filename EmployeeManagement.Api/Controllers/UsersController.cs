@@ -126,7 +126,7 @@ namespace EmployeeManagement.Api.Controllers
         #region Login method
         [HttpPost]
         [Route("Login")]
-        [Produces(typeof(Response))]
+        [Produces(typeof(UserDto))]
         public async Task<IActionResult> Login([FromBody]LoginUser model)
         {
             try
@@ -161,7 +161,7 @@ namespace EmployeeManagement.Api.Controllers
                         Email = user.Email,
                         Token = token
                     };
-                    return Ok(new Response { userDto = usr, Message = $"Login was successfull" });
+                    return Ok(usr);
                 }
 
                 return BadRequest("Login failed, password is not correct");
