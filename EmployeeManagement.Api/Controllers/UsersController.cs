@@ -170,7 +170,7 @@ namespace EmployeeManagement.Api.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Login failed", e);
-                return BadRequest(new Response { userDto = null, Message = $"Login failed" });
+                return BadRequest("Login failed");
             }
             #endregion
         }
