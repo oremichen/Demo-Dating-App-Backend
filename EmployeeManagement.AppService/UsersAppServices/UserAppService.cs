@@ -107,7 +107,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
                 var user = _mapper.Map<Members>(result);
                
                 user.Photo = _photoService.GetUserPhotos(id).ToList();
-                user.PhotoUrl = user.Photo.Where(r => r.IsMain == true).ToString();
+                user.PhotoUrl = GetPhotoUrl(id);
                 return user;
             }
             catch (Exception ex)
