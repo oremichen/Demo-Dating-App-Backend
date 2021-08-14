@@ -135,7 +135,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
             }
         }
 
-        public async Task<Users> UpdateUser(UpdateMembersDto member)
+        public async Task<Users> UpdateUser(MembersDto member)
         {
             var updateUser = new Users();
 
@@ -163,7 +163,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
                 updateUser = await _userRepo.UpdateUsers(user);
 
                 //insert user photos
-                await this.InsertUserPhotos(member);
+                //await this.InsertUserPhotos(member);
             }
             else
             {
@@ -182,7 +182,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
             return photo.Result.Url;
         }
 
-        public async Task InsertUserPhotos(UpdateMembersDto model)
+        public async Task InsertUserPhotos(MembersDto model)
         {
 
             var photos = new List<Photos>();
@@ -206,7 +206,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
 
         }
 
-        public async Task UpdateUserPhotos(MembersDto model)
+        public async Task UpdateUserPhotos(UpdateMembersDto model)
         {
 
             var photos = new List<Photos>();
@@ -217,8 +217,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
                 foreach (var itemPhoto in model.Photo)
                 {
                     //check if photo exist 
-
-                    //  var checkPhoto = await _photoRepository.GetMainPhotoByUserId
+                    var checkPhoto = await _photoRepository.GetPhotoById(itemPhoto.Id);
 
                     //if photo does not exist insert
 

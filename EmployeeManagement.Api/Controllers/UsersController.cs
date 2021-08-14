@@ -65,7 +65,7 @@ namespace EmployeeManagement.Api.Controllers
         [HttpPut]
         [Route("UpdateUser")]
         [ProducesResponseType(typeof(string), 200)]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateMembersDto model)
+        public async Task<IActionResult> UpdateUser([FromBody] MembersDto model)
         {
             try
             {
