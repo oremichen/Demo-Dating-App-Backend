@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using EmployeeManagement.Core;
+using EmployeeManagement.Repository.IStorage;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -12,62 +13,63 @@ namespace EmployeeManagement.Repository.PhotoRepository
 {
     public class PhotoRepository : IPhotoRepository
     {
-        private readonly ConnectionStrings _appSettings;
+        private readonly IStorageRepo _storageRepo;
 
-        public PhotoRepository(IOptions<ConnectionStrings> options)
+        public PhotoRepository(IStorageRepo storageRepo)
         {
-            _appSettings = options.Value;
+            _storageRepo = storageRepo;
         }
 
-        public IDbConnection Connection
+        public async Task<Photos> GetPhotoById(int id)
         {
-            get
+            var models = _storageRepo.UseConnection(conn =>
             {
-                return new SqlConnection(_appSettings.EmployeeConnection);
-            }
-        }
+                var sql = $"[dbo].[GetPhotoById] @id";
+                var result = conn.QueryFirstOrDefault<Photos>(sql, new
+                {
+                    id
+                });
 
-        public Task<Photos> GetMainPhotoByUserId(int userId)
-        {
-            throw new NotImplementedException();
+                return result;
+            });
+
+            return await Task.FromResult(models);
         }
 
         public  IEnumerable<Photos> GetUserPhotos(int userId)
         {
-            using (var conn = Connection)
+            var models = _storageRepo.UseConnection(conn =>
             {
                 var sql = $"[dbo].[GetPhotosByUserId] @userId";
-                var result =  conn.Query<Photos>(sql, new 
+                var result = conn.Query<Photos>(sql, new
                 {
                     userId
                 });
 
                 return result;
-            }
+            });
+
+            return models;
         }
 
         public async Task InsertPhotos(List<Photos> photos)
         {
-            using (var conn = Connection)
+               _storageRepo.UseConnection(conn =>
             {
                 foreach (var photo in photos)
                 {
                     var sql = $"[dbo].[InsertPhotos] @url, @ismain, @publicId, @userId";
-                    var result = await conn.ExecuteScalarAsync<long>(sql, new
+                     conn.ExecuteScalar<long>(sql, new
                     {
-                        
                         photo.Url,
                         photo.IsMain,
                         photo.PublicId,
                         photo.UserId
-                       
-                    });
-                   
-                }
 
-               await  Task.CompletedTask;
-               
-            }
+                    });
+                }
+            });
+            await Task.CompletedTask;
         }
 
       

@@ -8,7 +8,6 @@ namespace EmployeeManagement.Repository.IStorage
    
         public interface IStorageRepo
         {
-            // ANQ Data
             void UseConnection(Action<IDbConnection> action);
             T UseConnection<T>(Func<IDbConnection, T> func);
             IDbConnection CreateAndOpenConnection();

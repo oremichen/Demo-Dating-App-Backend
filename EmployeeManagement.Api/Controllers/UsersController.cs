@@ -64,8 +64,8 @@ namespace EmployeeManagement.Api.Controllers
 
         [HttpPut]
         [Route("UpdateUser")]
-        [Produces(typeof(string))]
-        public async Task<IActionResult> UpdateUser([FromBody] MembersDto model)
+        [ProducesResponseType(typeof(string), 200)]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateMembersDto model)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+       // [Authorize]
         [Route("GetAllUsers")]
         [Produces(typeof(List<Members>))]
         public async Task<IActionResult> GetAllUsers()

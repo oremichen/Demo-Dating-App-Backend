@@ -84,6 +84,7 @@
     <Build Include="StoredProcedures\Photos\GetPhotosByUserId.sql" />
     <Build Include="StoredProcedures\Users\UpdateUsers.sql" />
     <Build Include="StoredProcedures\Photos\InsertPhotos.sql" />
+    <Build Include="StoredProcedures\Photos\GetPhotoById.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="EmployeeManagement.Data.refactorlog" />

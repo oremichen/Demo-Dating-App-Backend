@@ -20,14 +20,14 @@ namespace EmployeeManagement.AppService.UsersAppServices
         private readonly IUserRepo _userRepo;
         private readonly IMapper _mapper;
         private readonly ITokenServices _tokenServices;
-        private readonly IPhotoService _photoService;
+        private readonly IPhotoRepository _photoRepository;
 
-        public UserAppService(IUserRepo userRepo, IMapper mapper, ITokenServices tokenServices, IPhotoService photoService)
+        public UserAppService(IUserRepo userRepo, IMapper mapper, ITokenServices tokenServices, IPhotoRepository photoRepository)
         {
             _userRepo = userRepo;
             _tokenServices = tokenServices;
             _mapper = mapper;
-            _photoService = photoService;
+            _photoRepository = photoRepository;
         }
 
         public async Task<UserDto> CreateUsers(CreateUsersDto user)
@@ -86,7 +86,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
                     LastAcvtive = s.LastActive,
                     LookingFor = s.LookingFor,
                     PhotoUrl = GetPhotoUrl(s.Id),
-                    Photo =  _photoService.GetUserPhotos(s.Id).ToList(),
+                    Photo =  this.GetUserPhotos(s.Id).ToList(),
                     
                 }).ToList();
 
@@ -106,7 +106,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
 
                 var user = _mapper.Map<Members>(result);
                
-                user.Photo = _photoService.GetUserPhotos(id).ToList();
+                user.Photo = this.GetUserPhotos(id).ToList();
                 user.PhotoUrl = GetPhotoUrl(id);
                 return user;
             }
@@ -135,7 +135,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
             }
         }
 
-        public async Task<Users> UpdateUser(MembersDto member)
+        public async Task<Users> UpdateUser(UpdateMembersDto member)
         {
             var updateUser = new Users();
 
@@ -163,7 +163,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
                 updateUser = await _userRepo.UpdateUsers(user);
 
                 //insert user photos
-                await _photoService.InsertUserPhotos(member);
+                await this.InsertUserPhotos(member);
             }
             else
             {
@@ -174,10 +174,99 @@ namespace EmployeeManagement.AppService.UsersAppServices
            
         }
 
+
+        #region Helper methods
         public string GetPhotoUrl(int id)
         {
-            var photo = _photoService.GetMainPhotoByUserId(id);
+            var photo = this.GetMainPhotoByUserId(id);
             return photo.Result.Url;
         }
+
+        public async Task InsertUserPhotos(UpdateMembersDto model)
+        {
+
+            var photos = new List<Photos>();
+            var photo = new Photos();
+
+            if (model.Photo.Count > 0)
+            {
+                foreach (var itemPhoto in model.Photo)
+                {
+                    photo.IsMain = itemPhoto.IsMain;
+                    photo.PublicId = itemPhoto.PublicId;
+                    photo.Url = itemPhoto.Url;
+                    photo.UserId = model.Id;
+
+                    photos.Add(photo);
+
+                }
+
+                await _photoRepository.InsertPhotos(photos);
+            }
+
+        }
+
+        public async Task UpdateUserPhotos(MembersDto model)
+        {
+
+            var photos = new List<Photos>();
+            var photo = new Photos();
+
+            if (model.Photo.Count > 0)
+            {
+                foreach (var itemPhoto in model.Photo)
+                {
+                    //check if photo exist 
+
+                    //  var checkPhoto = await _photoRepository.GetMainPhotoByUserId
+
+                    //if photo does not exist insert
+
+
+                    photo.IsMain = itemPhoto.IsMain;
+                    photo.PublicId = itemPhoto.PublicId;
+                    photo.Url = itemPhoto.Url;
+                    photo.UserId = model.Id;
+
+                    photos.Add(photo);
+
+                }
+
+                await _photoRepository.InsertPhotos(photos);
+            }
+
+        }
+
+        public IEnumerable<PhotoDto> GetUserPhotos(int userId)
+        {
+            var photoDtos = new List<PhotoDto>();
+
+
+            var photos = _photoRepository.GetUserPhotos(userId);
+            foreach (var photo in photos)
+            {
+                var photoDto = new PhotoDto();
+
+                photoDto.Id = photo.Id;
+                photoDto.IsMain = photo.IsMain;
+                photoDto.PublicId = photo.PublicId;
+                photoDto.Url = photo.Url;
+                photoDto.UserId = photo.UserId;
+
+                photoDtos.Add(photoDto);
+            }
+
+            return photoDtos;
+        }
+
+        public async Task<Photos> GetMainPhotoByUserId(int id)
+        {
+            var photos = _photoRepository.GetUserPhotos(id);
+            var getMainPhoto = photos.Where(r => r.IsMain == true).FirstOrDefault();
+            return await Task.FromResult(getMainPhoto);
+
+        }
+
+        #endregion
     }
 }
