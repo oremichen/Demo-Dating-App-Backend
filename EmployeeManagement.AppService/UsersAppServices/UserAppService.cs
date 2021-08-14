@@ -142,23 +142,25 @@ namespace EmployeeManagement.AppService.UsersAppServices
             var getUser = await _userRepo.GetUsersById(member.Id);
             if (getUser != null)
             {
-                var user = new Users()
-                {
-                    Id = getUser.Id,
-                    DateCreated = DateTime.Now,
-                    DateOfBirth = member.DateOfBirth,
-                    City = member.City,
-                    Email = getUser.Email,
-                    Gender = member.Gender,
-                    Interests = member.Interests,
-                    Introduction = member.Introduction,
-                    KnownAs = member.KnownAs,
-                    LastActive = DateTime.Now,
-                    LookingFor = member.LookingFor,
-                    Name = member.Name,
-                    PasswordHash = getUser.PasswordHash,
-                    PasswordSalt = getUser.PasswordSalt
-                };
+                //var user = new Users()
+                //{
+                //    Id = getUser.Id,
+                //    DateCreated = DateTime.Now,
+                //    DateOfBirth = member.DateOfBirth,
+                //    City = member.City,
+                //    Email = getUser.Email,
+                //    Gender = member.Gender,
+                //    Interests = member.Interests,
+                //    Introduction = member.Introduction,
+                //    KnownAs = member.KnownAs,
+                //    LastActive = DateTime.Now,
+                //    LookingFor = member.LookingFor,
+                //    Name = member.Name,
+                //    PasswordHash = getUser.PasswordHash,
+                //    PasswordSalt = getUser.PasswordSalt
+                //};
+
+                var user = _mapper.Map(member, getUser);
 
                 updateUser = await _userRepo.UpdateUsers(user);
 

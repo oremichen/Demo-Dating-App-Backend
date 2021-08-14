@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,6 +72,9 @@ namespace EmployeeManagement.Api.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    var user = User.FindFirst(ClaimTypes.Name)?.Value;
+                    var userAuth = User.FindFirst(ClaimTypes.AuthenticationMethod)?.Value;
+
                     var updateUser = await _userAppService.UpdateUser(model);
                     if (updateUser != null)
                     {
