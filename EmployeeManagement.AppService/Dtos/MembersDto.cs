@@ -39,8 +39,5 @@ namespace EmployeeManagement.AppService.Dtos
         public string City { get; set; }
 
         public DateTime DateOfBirth { get; set; }
-
-        public List<UpdatePhoto> Photo { get; set; }
-
     }
 }

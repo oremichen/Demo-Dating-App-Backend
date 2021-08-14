@@ -10,7 +10,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
     public interface IUserAppService
     {
         Task<UserDto> CreateUsers(CreateUsersDto user);
-        Task<Users> UpdateUser(MembersDto member);
+        Task<Users> UpdateUser(UpdateMembersDto member);
         Task<IEnumerable<Members>> GetAllUsers();
         Task<Members> GetUsersById(int id);
         Task<bool> CheckIfNameExist(string email);

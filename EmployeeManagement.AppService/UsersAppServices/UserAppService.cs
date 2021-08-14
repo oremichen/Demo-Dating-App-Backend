@@ -135,7 +135,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
             }
         }
 
-        public async Task<Users> UpdateUser(MembersDto member)
+        public async Task<Users> UpdateUser(UpdateMembersDto member)
         {
             var updateUser = new Users();
 
@@ -206,35 +206,35 @@ namespace EmployeeManagement.AppService.UsersAppServices
 
         }
 
-        public async Task UpdateUserPhotos(UpdateMembersDto model)
-        {
+        //public async Task UpdateUserPhotos(UpdateMembersDto model)
+        //{
 
-            var photos = new List<Photos>();
-            var photo = new Photos();
+        //    var photos = new List<Photos>();
+        //    var photo = new Photos();
 
-            if (model.Photo.Count > 0)
-            {
-                foreach (var itemPhoto in model.Photo)
-                {
-                    //check if photo exist 
-                    var checkPhoto = await _photoRepository.GetPhotoById(itemPhoto.Id);
+        //    if (model.Photo.Count > 0)
+        //    {
+        //        foreach (var itemPhoto in model.Photo)
+        //        {
+        //            //check if photo exist 
+        //            var checkPhoto = await _photoRepository.GetPhotoById(itemPhoto.Id);
 
-                    //if photo does not exist insert
+        //            //if photo does not exist insert
 
 
-                    photo.IsMain = itemPhoto.IsMain;
-                    photo.PublicId = itemPhoto.PublicId;
-                    photo.Url = itemPhoto.Url;
-                    photo.UserId = model.Id;
+        //            photo.IsMain = itemPhoto.IsMain;
+        //            photo.PublicId = itemPhoto.PublicId;
+        //            photo.Url = itemPhoto.Url;
+        //            photo.UserId = model.Id;
 
-                    photos.Add(photo);
+        //            photos.Add(photo);
 
-                }
+        //        }
 
-                await _photoRepository.InsertPhotos(photos);
-            }
+        //        await _photoRepository.InsertPhotos(photos);
+        //    }
 
-        }
+        //}
 
         public IEnumerable<PhotoDto> GetUserPhotos(int userId)
         {
