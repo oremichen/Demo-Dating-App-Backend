@@ -110,7 +110,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpGet]
-       // [Authorize]
+        [Authorize]
         [Route("GetUserById")]
         [Produces(typeof(Members))]
         public async Task<IActionResult> GetUserById([FromQuery]int id)
