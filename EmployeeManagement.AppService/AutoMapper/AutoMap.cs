@@ -17,6 +17,7 @@ namespace EmployeeManagement.AppService.AutoMapper
             CreateMap<List<Users>, List<Members>>();
             CreateMap<Users, CreateUsersDto>();
             CreateMap<UpdateMembersDto, Users>();
+            CreateMap<Photos, PhotoDto>();
         }
     }
 }

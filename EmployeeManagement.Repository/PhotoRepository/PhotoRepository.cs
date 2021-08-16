@@ -52,22 +52,21 @@ namespace EmployeeManagement.Repository.PhotoRepository
             return models;
         }
 
-        public async Task InsertPhotos(List<Photos> photos)
+        public async Task InsertPhotos(Photos photo)
         {
                _storageRepo.UseConnection(conn =>
             {
-                foreach (var photo in photos)
+               
+                var sql = $"[dbo].[InsertPhotos] @url, @ismain, @publicId, @userId";
+                    conn.ExecuteScalar<long>(sql, new
                 {
-                    var sql = $"[dbo].[InsertPhotos] @url, @ismain, @publicId, @userId";
-                     conn.ExecuteScalar<long>(sql, new
-                    {
-                        photo.Url,
-                        photo.IsMain,
-                        photo.PublicId,
-                        photo.UserId
+                    photo.Url,
+                    photo.IsMain,
+                    photo.PublicId,
+                    photo.UserId
 
-                    });
-                }
+                });
+               
             });
             await Task.CompletedTask;
         }

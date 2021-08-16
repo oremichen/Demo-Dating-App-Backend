@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EmployeeManagement.AppService.Dtos;
+using EmployeeManagement.AppService.Helpers;
 using EmployeeManagement.AppService.PasswordHelper;
 using EmployeeManagement.AppService.PhotoAppService;
 using EmployeeManagement.AppService.TokenService;
@@ -142,30 +143,9 @@ namespace EmployeeManagement.AppService.UsersAppServices
             var getUser = await _userRepo.GetUsersById(member.Id);
             if (getUser != null)
             {
-                //var user = new Users()
-                //{
-                //    Id = getUser.Id,
-                //    DateCreated = DateTime.Now,
-                //    DateOfBirth = member.DateOfBirth,
-                //    City = member.City,
-                //    Email = getUser.Email,
-                //    Gender = member.Gender,
-                //    Interests = member.Interests,
-                //    Introduction = member.Introduction,
-                //    KnownAs = member.KnownAs,
-                //    LastActive = DateTime.Now,
-                //    LookingFor = member.LookingFor,
-                //    Name = member.Name,
-                //    PasswordHash = getUser.PasswordHash,
-                //    PasswordSalt = getUser.PasswordSalt
-                //};
-
                 var user = _mapper.Map(member, getUser);
 
                 updateUser = await _userRepo.UpdateUsers(user);
-
-                //insert user photos
-                //await this.InsertUserPhotos(member);
             }
             else
             {
@@ -184,80 +164,11 @@ namespace EmployeeManagement.AppService.UsersAppServices
             return photo.Result.Url;
         }
 
-        public async Task InsertUserPhotos(MembersDto model)
-        {
-
-            var photos = new List<Photos>();
-            var photo = new Photos();
-
-            if (model.Photo.Count > 0)
-            {
-                foreach (var itemPhoto in model.Photo)
-                {
-                    photo.IsMain = itemPhoto.IsMain;
-                    photo.PublicId = itemPhoto.PublicId;
-                    photo.Url = itemPhoto.Url;
-                    photo.UserId = model.Id;
-
-                    photos.Add(photo);
-
-                }
-
-                await _photoRepository.InsertPhotos(photos);
-            }
-
-        }
-
-        //public async Task UpdateUserPhotos(UpdateMembersDto model)
-        //{
-
-        //    var photos = new List<Photos>();
-        //    var photo = new Photos();
-
-        //    if (model.Photo.Count > 0)
-        //    {
-        //        foreach (var itemPhoto in model.Photo)
-        //        {
-        //            //check if photo exist 
-        //            var checkPhoto = await _photoRepository.GetPhotoById(itemPhoto.Id);
-
-        //            //if photo does not exist insert
-
-
-        //            photo.IsMain = itemPhoto.IsMain;
-        //            photo.PublicId = itemPhoto.PublicId;
-        //            photo.Url = itemPhoto.Url;
-        //            photo.UserId = model.Id;
-
-        //            photos.Add(photo);
-
-        //        }
-
-        //        await _photoRepository.InsertPhotos(photos);
-        //    }
-
-        //}
-
         public IEnumerable<PhotoDto> GetUserPhotos(int userId)
         {
-            var photoDtos = new List<PhotoDto>();
-
-
             var photos = _photoRepository.GetUserPhotos(userId);
-            foreach (var photo in photos)
-            {
-                var photoDto = new PhotoDto();
-
-                photoDto.Id = photo.Id;
-                photoDto.IsMain = photo.IsMain;
-                photoDto.PublicId = photo.PublicId;
-                photoDto.Url = photo.Url;
-                photoDto.UserId = photo.UserId;
-
-                photoDtos.Add(photoDto);
-            }
-
-            return photoDtos;
+            var photoList = GetPhotosHelper.GetPhotos(photos.ToList());
+            return photoList;
         }
 
         public async Task<Photos> GetMainPhotoByUserId(int id)
