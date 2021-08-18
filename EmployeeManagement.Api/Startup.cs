@@ -1,6 +1,7 @@
 using System.Text;
 using AutoMapper;
 using EmployeeManagement.Api.Middleware;
+using EmployeeManagement.Api.ServicelifetimeTest;
 using EmployeeManagement.AppService;
 using EmployeeManagement.AppService.AutoMapper;
 using EmployeeManagement.AppService.Helpers;
@@ -33,6 +34,11 @@ namespace EmployeeManagement.Api
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 
+            //this is a test for service lifetime compatibility
+            services.AddScoped<MyFatherService>();
+            services.AddScoped<MyMotherService>();
+            services.AddTransient<MyChildService>();
+
             services.AddRepoServices();
             services.AddAppServiceCollection();
 
@@ -44,6 +50,8 @@ namespace EmployeeManagement.Api
                     p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                 });
             });
+
+
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
