@@ -1,7 +1,6 @@
 using System.Text;
 using AutoMapper;
 using EmployeeManagement.Api.Middleware;
-using EmployeeManagement.Api.ServicelifetimeTest;
 using EmployeeManagement.AppService;
 using EmployeeManagement.AppService.AutoMapper;
 using EmployeeManagement.AppService.Helpers;
