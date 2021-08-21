@@ -1,14 +1,8 @@
-﻿using AutoMapper;
-using EmployeeManagement.Api.ControllerBase;
+﻿using EmployeeManagement.Api.ControllerBase;
 using EmployeeManagement.AppService.Dtos;
 using EmployeeManagement.AppService.PhotoAppService;
-using EmployeeManagement.AppService.UsersAppServices;
-using EmployeeManagement.Repository.UserRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmployeeManagement.Api.Controllers
@@ -32,7 +26,7 @@ namespace EmployeeManagement.Api.Controllers
             {
                 return BadRequest("Photo upload failed");
             }
-            return Created("",result);
+            return Ok(StatusCodes.Status201Created);
         }
     }
 }
