@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[InsertPhotos]
 	@url nvarchar(max),
 	@ismain nvarchar(max),
-    @publicId int,
+    @publicId nvarchar(max),
     @userId int
 
 AS 

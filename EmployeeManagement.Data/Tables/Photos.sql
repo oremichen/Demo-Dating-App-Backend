@@ -3,6 +3,6 @@
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY (1,1),
     [Url] NVARCHAR(MAX) NOT NULL,
     [IsMain] bit NULL,
-    [PublicId] int NULL,
+    [PublicId] NVARCHAR(MAX) NULL,
     [UserId] int Not null
 )

@@ -34,11 +34,6 @@ namespace EmployeeManagement.Api
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 
-            //this is a test for service lifetime compatibility
-            services.AddScoped<MyFatherService>();
-            services.AddScoped<MyMotherService>();
-            services.AddTransient<MyChildService>();
-
             services.AddRepoServices();
             services.AddAppServiceCollection();
 

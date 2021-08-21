@@ -15,14 +15,10 @@ namespace EmployeeManagement.Api.Controllers
 {
     public class PhotosController : BaseController
     {
-        private readonly IUserAppService _userAppService;
-        private readonly IMapper _mapper;
         private readonly IPhotoService _photoService;
 
-        public PhotosController(IMapper mapper, IUserAppService userAppService, IPhotoService photoService)
+        public PhotosController(IPhotoService photoService)
         {
-            _userAppService = userAppService;
-            _mapper = mapper;
             _photoService = photoService;
         }
 
@@ -36,7 +32,7 @@ namespace EmployeeManagement.Api.Controllers
             {
                 return BadRequest("Photo upload failed");
             }
-            return Ok(result);
+            return Created("",result);
         }
     }
 }
