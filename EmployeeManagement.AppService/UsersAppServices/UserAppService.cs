@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using EmployeeManagement.AppService.Dtos;
+using EmployeeManagement.AppService.Helpers;
 using EmployeeManagement.AppService.PasswordHelper;
+using EmployeeManagement.AppService.PhotoAppService;
 using EmployeeManagement.AppService.TokenService;
 using EmployeeManagement.Core;
+using EmployeeManagement.Repository.PhotoRepository;
 using EmployeeManagement.Repository.UserRepository;
 using System;
 using System.Collections.Generic;
@@ -18,12 +21,14 @@ namespace EmployeeManagement.AppService.UsersAppServices
         private readonly IUserRepo _userRepo;
         private readonly IMapper _mapper;
         private readonly ITokenServices _tokenServices;
+        private readonly IPhotoRepository _photoRepository;
 
-        public UserAppService(IUserRepo userRepo, IMapper mapper, ITokenServices tokenServices)
+        public UserAppService(IUserRepo userRepo, IMapper mapper, ITokenServices tokenServices, IPhotoRepository photoRepository)
         {
             _userRepo = userRepo;
             _tokenServices = tokenServices;
             _mapper = mapper;
+            _photoRepository = photoRepository;
         }
 
         public async Task<UserDto> CreateUsers(CreateUsersDto user)
@@ -60,22 +65,33 @@ namespace EmployeeManagement.AppService.UsersAppServices
             }
         }
 
-        public async Task<IEnumerable<UsersDto>> GetAllUsers()
+        public async Task<IEnumerable<Members>> GetAllUsers()
         {
             try
             {
                 var userList = await _userRepo.GetAllUsers();
 
-                var ListResults = userList.AsQueryable().Select(s => new UsersDto
+                var listResults = userList.AsQueryable().Select(s => new Members
                 {
                     Id = s.Id,
                     Name = s.Name,
                     Email = s.Email,
-                    DateCreated = s.DateCreated
-
+                    DateCreated = s.DateCreated,
+                    Age = s.Age,
+                    City = s.City,
+                    DateOfBirth = s.DateOfBirth,
+                    Gender = s.Gender,
+                    Interests = s.Interests,
+                    Introduction = s.Introduction,
+                    KnownAs = s.KnownAs,
+                    LastAcvtive = s.LastActive,
+                    LookingFor = s.LookingFor,
+                    PhotoUrl = GetPhotoUrl(s.Id),
+                    Photo =  this.GetUserPhotos(s.Id).ToList(),
+                    
                 }).ToList();
 
-                return ListResults;
+                return listResults;
             }
             catch (Exception ex)
             {
@@ -83,13 +99,16 @@ namespace EmployeeManagement.AppService.UsersAppServices
             }
         }
 
-        public async Task<UsersDto> GetUsersById(int id)
+        public async Task<Members> GetUsersById(int id)
         {
             try
             {
                 var result = await _userRepo.GetUsersById(id);
 
-                var user = _mapper.Map<UsersDto>(result);
+                var user = _mapper.Map<Members>(result);
+               
+                user.Photo = this.GetUserPhotos(id).ToList();
+                user.PhotoUrl = GetPhotoUrl(id);
                 return user;
             }
             catch (Exception ex)
@@ -116,5 +135,50 @@ namespace EmployeeManagement.AppService.UsersAppServices
                 throw ex;
             }
         }
+
+        public async Task<Users> UpdateUser(UpdateMembersDto member)
+        {
+            var updateUser = new Users();
+
+            var getUser = await _userRepo.GetUsersById(member.Id);
+            if (getUser != null)
+            {
+                var user = _mapper.Map(member, getUser);
+
+                updateUser = await _userRepo.UpdateUsers(user);
+            }
+            else
+            {
+                updateUser = null;
+            }
+
+            return updateUser;
+           
+        }
+
+
+        #region Helper methods
+        public string GetPhotoUrl(int id)
+        {
+            var photo = this.GetMainPhotoByUserId(id);
+            return photo.Result.Url;
+        }
+
+        public IEnumerable<PhotoDto> GetUserPhotos(int userId)
+        {
+            var photos = _photoRepository.GetUserPhotos(userId);
+            var photoList = GetPhotosHelper.GetPhotos(photos.ToList());
+            return photoList;
+        }
+
+        public async Task<Photos> GetMainPhotoByUserId(int id)
+        {
+            var photos = _photoRepository.GetUserPhotos(id);
+            var getMainPhoto = photos.Where(r => r.IsMain == true).FirstOrDefault();
+            return await Task.FromResult(getMainPhoto);
+
+        }
+
+        #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,9 +63,38 @@ namespace EmployeeManagement.Api.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("UpdateUser")]
+        [ProducesResponseType(typeof(string), 200)]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateMembersDto model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = User.FindFirst(ClaimTypes.Name)?.Value;
+                    var userAuth = User.FindFirst(ClaimTypes.AuthenticationMethod)?.Value;
+
+                    var updateUser = await _userAppService.UpdateUser(model);
+                    if (updateUser != null)
+                    {
+                        return Ok("Update successful");
+                    }
+                    return BadRequest("Update request failed");
+                }
+                return BadRequest("Model is invalid");
+               
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         [HttpGet]
+        [Authorize]
         [Route("GetAllUsers")]
-        [Produces(typeof(List<UsersDto>))]
+        [Produces(typeof(List<Members>))]
         public async Task<IActionResult> GetAllUsers()
         {
             try
@@ -82,7 +112,7 @@ namespace EmployeeManagement.Api.Controllers
         [HttpGet]
         [Authorize]
         [Route("GetUserById")]
-        [Produces(typeof(UsersDto))]
+        [Produces(typeof(Members))]
         public async Task<IActionResult> GetUserById([FromQuery]int id)
         {
             try
@@ -100,7 +130,7 @@ namespace EmployeeManagement.Api.Controllers
         #region Login method
         [HttpPost]
         [Route("Login")]
-        [Produces(typeof(Response))]
+        [Produces(typeof(UserDto))]
         public async Task<IActionResult> Login([FromBody]LoginUser model)
         {
             try
@@ -135,7 +165,7 @@ namespace EmployeeManagement.Api.Controllers
                         Email = user.Email,
                         Token = token
                     };
-                    return Ok(new Response { userDto = usr, Message = $"Login was successfull" });
+                    return Ok(usr);
                 }
 
                 return BadRequest("Login failed, password is not correct");
@@ -144,7 +174,7 @@ namespace EmployeeManagement.Api.Controllers
             catch (Exception e)
             {
                 _logger.LogError("Login failed", e);
-                return BadRequest(new Response { userDto = null, Message = $"Login failed" });
+                return BadRequest("Login failed");
             }
             #endregion
         }

@@ -7,5 +7,6 @@ namespace EmployeeManagement.Repository
     public class ConnectionStrings
     {
         public string EmployeeConnection { get; set; }
+
     }
 }

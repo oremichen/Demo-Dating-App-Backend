@@ -9,7 +9,7 @@
     [DateOfBirth] DATETIME2 NULL,
     [Age] int Null,
     [KnownAs] NVARCHAR(MAX) Null,
-    [LastAcvtive] NVARCHAR(MAX) Null,
+    [LastActive] NVARCHAR(MAX) Null,
     [Gender] NVARCHAR(3) Null,
     [Introduction] NVARCHAR(MAX) Null,
     [LookingFor] NVARCHAR(MAX) Null,

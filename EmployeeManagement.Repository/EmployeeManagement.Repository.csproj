@@ -16,8 +16,4 @@
     <ProjectReference Include="..\EmployeeManagement.Core\EmployeeManagement.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="PhotoRepository\" />
-  </ItemGroup>
-
 </Project>

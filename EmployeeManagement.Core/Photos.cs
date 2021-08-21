@@ -4,9 +4,8 @@ using System.Text;
 
 namespace EmployeeManagement.Core
 {
-    public class Photo
+    public class Photos
     {
-        public int PhotoId { get; set; }
         public string Url { get; set; }
         public bool IsMain { get; set; }
         public string PublicId { get; set; }

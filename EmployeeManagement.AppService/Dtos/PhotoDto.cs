@@ -6,10 +6,27 @@ namespace EmployeeManagement.AppService.Dtos
 {
     public class PhotoDto
     {
-        public int PhotoId { get; set; }
+        public int Id { get; set; }
         public string Url { get; set; }
         public bool IsMain { get; set; }
         public string PublicId { get; set; }
+        public int UserId { get; set; }
+    }
+
+    public class CreatePhoto
+    {
+        public string Url { get; set; }
+        public bool IsMain { get; set; }
+        public string PublicId { get; set; }
+        public int UserId { get; set; }
+    }
+
+    public class UpdatePhoto
+    {
         public int Id { get; set; }
+        public string Url { get; set; }
+        public bool IsMain { get; set; }
+        public string PublicId { get; set; }
+        public int UserId { get; set; }
     }
 }
