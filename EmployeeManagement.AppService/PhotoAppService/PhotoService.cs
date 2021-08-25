@@ -9,6 +9,7 @@ using EmployeeManagement.Repository.UserRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -81,6 +82,29 @@ namespace EmployeeManagement.AppService.PhotoAppService
             var deleteParams = new DeletionParams(publicId);
             var result = await _cloudinary.DestroyAsync(deleteParams);
             return result;
+        }
+
+        public async Task<bool> CheckMainPhoto(int id)
+        {
+            var res = await _photoRepository.GetPhotoById(id);
+            if (res.IsMain == true)
+            {
+                return true;
+            }
+            return false;
+            
+        }
+
+        public async Task<List<Photos>> GetUserPhotos(int userId)
+        {
+            var photoList = _photoRepository.GetUserPhotos(userId);
+            return await Task.FromResult(photoList.ToList());
+        }
+
+        public async Task UpdatePhoto(Photos photos)
+        {
+             await _photoRepository.UpdatePhoto(photos);
+             await Task.CompletedTask;
         }
     }
 }

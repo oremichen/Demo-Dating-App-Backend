@@ -71,6 +71,24 @@ namespace EmployeeManagement.Repository.PhotoRepository
             await Task.CompletedTask;
         }
 
-      
+        public async Task UpdatePhoto(Photos photo)
+        {
+              _storageRepo.UseConnection(conn =>
+            {
+
+                var sql = $"[dbo].[UpdatePhoto] @id, @url, @ismain, @publicId, @userId";
+                conn.ExecuteScalar<long>(sql, new
+                {
+                    photo.Id,
+                    photo.Url,
+                    photo.IsMain,
+                    photo.PublicId,
+                    photo.UserId
+
+                });
+
+            });
+            await Task.CompletedTask;
+        }
     }
 }
