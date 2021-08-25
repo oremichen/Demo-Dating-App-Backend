@@ -15,5 +15,6 @@ namespace EmployeeManagement.AppService.PhotoAppService
         Task<DeletionResult> AddPhotoAsync(string publicId);
         Task<List<Photos>> GetUserPhotos(int userId);
         Task UpdatePhoto(Photos photos);
+        Task DeletePhotoById(int id);
     }
 }

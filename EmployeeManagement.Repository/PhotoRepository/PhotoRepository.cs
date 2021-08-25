@@ -1,12 +1,7 @@
 ﻿using Dapper;
 using EmployeeManagement.Core;
 using EmployeeManagement.Repository.IStorage;
-using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmployeeManagement.Repository.PhotoRepository
@@ -18,6 +13,20 @@ namespace EmployeeManagement.Repository.PhotoRepository
         public PhotoRepository(IStorageRepo storageRepo)
         {
             _storageRepo = storageRepo;
+        }
+
+        public async Task DeletePhoto(int id)
+        {
+              _storageRepo.UseConnection(conn =>
+            {
+                var sql = $"[dbo].[DeletePhoto] @id";
+                var result = conn.ExecuteScalarAsync(sql, new
+                {
+                    id
+                });
+            });
+            await Task.CompletedTask;
+
         }
 
         public async Task<Photos> GetPhotoById(int id)

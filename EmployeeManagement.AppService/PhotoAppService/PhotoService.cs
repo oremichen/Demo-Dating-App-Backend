@@ -8,7 +8,6 @@ using EmployeeManagement.Repository.PhotoRepository;
 using EmployeeManagement.Repository.UserRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -93,6 +92,12 @@ namespace EmployeeManagement.AppService.PhotoAppService
             }
             return false;
             
+        }
+
+        public async Task DeletePhotoById(int id)
+        {
+            await _photoRepository.DeletePhoto(id);
+            await Task.CompletedTask;
         }
 
         public async Task<List<Photos>> GetUserPhotos(int userId)

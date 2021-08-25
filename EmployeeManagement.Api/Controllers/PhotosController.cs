@@ -37,7 +37,7 @@ namespace EmployeeManagement.Api.Controllers
             {
                 return BadRequest($"Photo upload failed {ex}");
             }
-           
+
         }
 
         [HttpPut]
@@ -47,29 +47,53 @@ namespace EmployeeManagement.Api.Controllers
             try
             {
                 var photoList = await _photoService.GetUserPhotos(userId);
-                var photo = photoList.Where(x => x.Id == id).FirstOrDefault();
-
-                if (photo.IsMain == true)
+                if (photoList.Count > 0)
                 {
-                    return BadRequest("This photo is already your main");
+                    var photo = photoList.Where(x => x.Id == id).FirstOrDefault();
+
+                    if (photo.IsMain == true)
+                    {
+                        return BadRequest("This photo is already your main");
+                    }
+
+                    //set previous main to false
+                    var mainphoto = photoList.Where(x => x.IsMain == true).FirstOrDefault();
+                    mainphoto.IsMain = false;
+                    await _photoService.UpdatePhoto(mainphoto);
+
+                    //set new photo to main
+                    photo.IsMain = true;
+                    await _photoService.UpdatePhoto(photo);
+
+                    return NoContent();
                 }
-
-                //set previous main to false
-                var mainphoto = photoList.Where(x => x.IsMain == true).FirstOrDefault();
-                mainphoto.IsMain = false;
-                await _photoService.UpdatePhoto(mainphoto);
-
-                //set new photo to main
-                photo.IsMain = true;
-                await _photoService.UpdatePhoto(photo);
-
-                return NoContent();
+                return NotFound("Photo not found for this user, upload a photo");
+              
             }
             catch (Exception ex)
             {
                 return BadRequest($"Failed to set main photo {ex}");
             }
-           
+
+        }
+
+        [HttpDelete]
+        [Route("DeletePhoto")]
+        public async Task<ActionResult> Deletephoto(int id)
+        {
+            try
+            {
+                if (id > 0)
+                {
+                    await _photoService.DeletePhotoById(id);
+                    return Ok("Photo deleted successfully");
+                }
+                return BadRequest("Invalid request");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to delete photo {ex}");
+            }
         }
     }
 }
