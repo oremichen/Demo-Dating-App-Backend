@@ -89,7 +89,7 @@ namespace EmployeeManagement.Api.Controllers
                     if (photo.IsMain) { return BadRequest("Cannot delete main photo"); }
 
                     await _photoService.DeletePhotoById(id);
-                    return Ok("Photo deleted successfully");
+                    return Ok();
                 }
                 return BadRequest("Invalid request");
             }
