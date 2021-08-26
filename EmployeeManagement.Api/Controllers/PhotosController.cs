@@ -85,6 +85,9 @@ namespace EmployeeManagement.Api.Controllers
             {
                 if (id > 0)
                 {
+                    var photo = await _photoService.GetPhotoById(id);
+                    if (photo.IsMain) { return BadRequest("Cannot delete main photo"); }
+
                     await _photoService.DeletePhotoById(id);
                     return Ok("Photo deleted successfully");
                 }

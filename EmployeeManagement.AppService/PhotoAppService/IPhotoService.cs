@@ -16,5 +16,6 @@ namespace EmployeeManagement.AppService.PhotoAppService
         Task<List<Photos>> GetUserPhotos(int userId);
         Task UpdatePhoto(Photos photos);
         Task DeletePhotoById(int id);
+        Task<Photos> GetPhotoById(int id);
     }
 }
