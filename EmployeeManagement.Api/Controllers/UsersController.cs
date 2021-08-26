@@ -163,7 +163,8 @@ namespace EmployeeManagement.Api.Controllers
                         Id = user.Id,
                         Name = user.Name,
                         Email = user.Email,
-                        Token = token
+                        Token = token,
+                        Url = _userAppService.GetPhotoUrl(user.Id)
                     };
                     return Ok(usr);
                 }

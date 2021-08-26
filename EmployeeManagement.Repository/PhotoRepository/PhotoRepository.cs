@@ -20,7 +20,7 @@ namespace EmployeeManagement.Repository.PhotoRepository
               _storageRepo.UseConnection(conn =>
             {
                 var sql = $"[dbo].[DeletePhoto] @id";
-                var result = conn.ExecuteScalarAsync(sql, new
+                var result = conn.ExecuteScalar(sql, new
                 {
                     id
                 });

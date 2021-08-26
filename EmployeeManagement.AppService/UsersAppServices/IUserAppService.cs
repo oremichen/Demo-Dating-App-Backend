@@ -14,5 +14,6 @@ namespace EmployeeManagement.AppService.UsersAppServices
         Task<IEnumerable<Members>> GetAllUsers();
         Task<Members> GetUsersById(int id);
         Task<bool> CheckIfNameExist(string email);
+        string GetPhotoUrl(int id);
     }
 }
