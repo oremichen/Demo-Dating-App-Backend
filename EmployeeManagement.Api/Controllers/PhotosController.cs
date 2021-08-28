@@ -95,7 +95,7 @@ namespace EmployeeManagement.Api.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Failed to delete photo {ex}");
+                return BadRequest($"Failed to delete photo {ex.Message}");
             }
         }
     }
