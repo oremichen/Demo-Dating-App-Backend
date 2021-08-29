@@ -42,7 +42,9 @@ namespace EmployeeManagement.AppService.TokenService
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return tokenHandler.WriteToken(token);
+            var tokenHandlerResult =  tokenHandler.WriteToken(token);
+
+            return await Task.FromResult(tokenHandlerResult);
         }
     }
 }

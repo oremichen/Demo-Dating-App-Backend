@@ -34,14 +34,18 @@ namespace EmployeeManagement.Repository.UserRepository
         {
             using (var conn = Connection)
             {
-                var sql = $"[dbo].[CreateUsers] @name, @email, @passwordHash, @passwordSalt, @datecreated";
+                var sql = $"[dbo].[CreateUsers] @name, @email, @passwordHash, @passwordSalt, @datecreated, @dateofbirth, @knownas, @city, @gender";
                 var result = await conn.ExecuteScalarAsync<long>(sql, new
                 {
                     model.Name,
                     model.Email,
                     model.PasswordHash,
                     model.PasswordSalt,
-                    model.DateCreated
+                    model.DateCreated,
+                    model.DateOfBirth,
+                    model.KnownAs,
+                    model.City,
+                    model.Gender
                 });
                 return result;
             }

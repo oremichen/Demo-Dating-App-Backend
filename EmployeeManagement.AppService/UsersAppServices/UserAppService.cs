@@ -44,7 +44,11 @@ namespace EmployeeManagement.AppService.UsersAppServices
                     Email = user.Email,
                     PasswordHash = passwd,
                     PasswordSalt = passwdsalt,
-                    DateCreated = user.DateCreated
+                    DateCreated = user.DateCreated,
+                    KnownAs = user.KnownAs,
+                    DateOfBirth = user.DateOfBirth,
+                    City = user.City,
+                    Gender = user.Gender
                 };
                 var userId = await _userRepo.CreateUsers(users);
 
