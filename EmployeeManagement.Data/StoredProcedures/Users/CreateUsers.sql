@@ -5,6 +5,7 @@
     @passwordSalt nvarchar(MAX),
 	@datecreated DateTime2,
 	@dateofbirth  DateTime2, 
+	@age int,
 	@knownas  nvarchar(MAX), 
 	@city  nvarchar(MAX), 
 	@gender nvarchar(10)
@@ -13,11 +14,11 @@ AS
 BEGIN
 
 	INSERT INTO Users
-	([Name],[Email], [PasswordHash], [PasswordSalt], [DateCreated])
+	([Name],[Email], [PasswordHash], [PasswordSalt], [DateCreated], [DateOfBirth], [Age], [KnownAs], [City], [Gender])
 
 	output inserted.Id
 
 	values
-	(@name, @email, @passwordHash, @passwordSalt, @datecreated)
+	(@name, @email, @passwordHash, @passwordSalt, @datecreated, @dateofbirth, @age, @knownas, @city, @gender)
 
 end

@@ -2,7 +2,6 @@
 using EmployeeManagement.AppService.Dtos;
 using EmployeeManagement.AppService.Helpers;
 using EmployeeManagement.AppService.PasswordHelper;
-using EmployeeManagement.AppService.PhotoAppService;
 using EmployeeManagement.AppService.TokenService;
 using EmployeeManagement.Core;
 using EmployeeManagement.Repository.PhotoRepository;
@@ -10,8 +9,6 @@ using EmployeeManagement.Repository.UserRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmployeeManagement.AppService.UsersAppServices
@@ -165,7 +162,11 @@ namespace EmployeeManagement.AppService.UsersAppServices
         public string GetPhotoUrl(int id)
         {
             var photo = this.GetMainPhotoByUserId(id);
-            return photo.Result.Url;
+            if (photo != null)
+            {
+                return photo.Url;
+            }
+            return null;
         }
 
         public IEnumerable<PhotoDto> GetUserPhotos(int userId)
@@ -175,11 +176,11 @@ namespace EmployeeManagement.AppService.UsersAppServices
             return photoList;
         }
 
-        public async Task<Photos> GetMainPhotoByUserId(int id)
+        public Photos GetMainPhotoByUserId(int id)
         {
             var photos = _photoRepository.GetUserPhotos(id);
             var getMainPhoto = photos.Where(r => r.IsMain == true).FirstOrDefault();
-            return await Task.FromResult(getMainPhoto);
+            return getMainPhoto;
 
         }
 

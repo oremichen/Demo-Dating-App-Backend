@@ -34,7 +34,7 @@ namespace EmployeeManagement.Repository.UserRepository
         {
             using (var conn = Connection)
             {
-                var sql = $"[dbo].[CreateUsers] @name, @email, @passwordHash, @passwordSalt, @datecreated, @dateofbirth, @knownas, @city, @gender";
+                var sql = $"[dbo].[CreateUsers] @name, @email, @passwordHash, @passwordSalt, @datecreated, @dateofbirth, @age, @knownas, @city, @gender";
                 var result = await conn.ExecuteScalarAsync<long>(sql, new
                 {
                     model.Name,
@@ -43,6 +43,7 @@ namespace EmployeeManagement.Repository.UserRepository
                     model.PasswordSalt,
                     model.DateCreated,
                     model.DateOfBirth,
+                    model.Age,
                     model.KnownAs,
                     model.City,
                     model.Gender
