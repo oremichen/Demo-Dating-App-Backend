@@ -16,7 +16,7 @@ namespace EmployeeManagement.AppService.Dtos
         [Required(ErrorMessage = "This field is required")]
         public string Password { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "This field is required")]
         public string KnownAs { get; set; }
