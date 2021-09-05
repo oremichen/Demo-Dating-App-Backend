@@ -34,7 +34,8 @@ namespace EmployeeManagement.Repository.UserRepository
         {
             using (var conn = Connection)
             {
-                var sql = $"[dbo].[CreateUsers] @name, @email, @passwordHash, @passwordSalt, @datecreated, @dateofbirth, @age, @knownas, @city, @gender";
+                var sql = $"[dbo].[CreateUsers] @name, @email, @passwordHash, @passwordSalt, @datecreated, @dateofbirth, @age, @knownas, @lastActive," +
+                    $" @gender, @introduction, @lookingfor, @interests, @city";
                 var result = await conn.ExecuteScalarAsync<long>(sql, new
                 {
                     model.Name,
@@ -45,8 +46,13 @@ namespace EmployeeManagement.Repository.UserRepository
                     model.DateOfBirth,
                     model.Age,
                     model.KnownAs,
+                    model.LastActive,
+                    model.Gender,
+                    model.Introduction,
+                    model.LookingFor,
+                    model.Interests,
                     model.City,
-                    model.Gender
+                  
                 });
                 return result;
             }

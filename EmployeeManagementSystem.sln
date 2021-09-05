@@ -13,8 +13,6 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "EmployeeManagement.Data", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeManagement.Api", "EmployeeManagement.Api\EmployeeManagement.Api.csproj", "{161C1919-BF64-439B-81D3-522C84BB95B0}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database1", "Database1\Database1.sqlproj", "{0F932942-AF89-405B-A8B3-8D63908C3CB7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,12 +41,6 @@ Global
 		{161C1919-BF64-439B-81D3-522C84BB95B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{161C1919-BF64-439B-81D3-522C84BB95B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{161C1919-BF64-439B-81D3-522C84BB95B0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0F932942-AF89-405B-A8B3-8D63908C3CB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F932942-AF89-405B-A8B3-8D63908C3CB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F932942-AF89-405B-A8B3-8D63908C3CB7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{0F932942-AF89-405B-A8B3-8D63908C3CB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F932942-AF89-405B-A8B3-8D63908C3CB7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0F932942-AF89-405B-A8B3-8D63908C3CB7}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
