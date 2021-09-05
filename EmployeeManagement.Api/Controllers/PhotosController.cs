@@ -30,7 +30,7 @@ namespace EmployeeManagement.Api.Controllers
                 {
                     return BadRequest("Photo upload failed");
                 }
-                return Ok(StatusCodes.Status201Created);
+                return Ok(result);
             }
 
             catch (Exception ex)
