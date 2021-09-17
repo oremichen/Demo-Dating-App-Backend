@@ -66,10 +66,9 @@ namespace EmployeeManagement.AppService.UsersAppServices
             }
         }
 
-        public async Task<IEnumerable<Members>> GetAllUsers()
+        public async Task<PagedList<Members>> GetAllUsers(UserParams userParams)
         {
-            try
-            {
+           
                 var userList = await _userRepo.GetAllUsers();
 
                 var listResults = userList.AsQueryable().Select(s => new Members
@@ -90,14 +89,12 @@ namespace EmployeeManagement.AppService.UsersAppServices
                     PhotoUrl = GetPhotoUrl(s.Id),
                     Photo =  this.GetUserPhotos(s.Id).ToList(),
                     
-                }).ToList();
+                });
 
-                return listResults;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+                var memberList = await PagedList<Members>.CreateAsync(listResults, userParams.PageNumber, userParams.PageSize);
+
+                return memberList;
+           
         }
 
         public async Task<Members> GetUsersById(int id)

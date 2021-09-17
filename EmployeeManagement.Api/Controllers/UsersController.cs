@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EmployeeManagement.Api.ControllerBase;
 using EmployeeManagement.AppService.Dtos;
+using EmployeeManagement.AppService.Helpers;
 using EmployeeManagement.AppService.PasswordHelper;
 using EmployeeManagement.AppService.TokenService;
 using EmployeeManagement.AppService.UsersAppServices;
@@ -92,12 +93,13 @@ namespace EmployeeManagement.Api.Controllers
         [HttpGet]
         [Authorize]
         [Route("GetAllUsers")]
-        [Produces(typeof(List<Members>))]
-        public async Task<IActionResult> GetAllUsers()
+        [Produces(typeof(PagedList<Members>))]
+        public async Task<IActionResult> GetAllUsers([FromQuery]UserParams userParams)
         {
             try
             {
-                var result = await _userAppService.GetAllUsers();
+                var result = await _userAppService.GetAllUsers(userParams);
+                Response.AddPaginationHeader(result.CurrentPage, result.PageSize, result.TotalCount, result.TotalPages);
                 return Ok(result);
             }
             catch (Exception e)
