@@ -91,13 +91,19 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         [Route("GetAllUsers")]
         [Produces(typeof(PagedList<Members>))]
-        public async Task<IActionResult> GetAllUsers([FromQuery]UserParams userParams)
+        public async Task<IActionResult> GetAllUsers([FromQuery]UserParams userParams, int loggedInUser)
         {
             try
             {
+                var user = await _userAppService.GetUsersById(loggedInUser);
+                userParams.CurrentUserName = user.Name;
+
+                if (string.IsNullOrEmpty(userParams.Gender))
+                    userParams.CurrentUserName = user.Gender == "male" ? "female" : "male";
+
                 var result = await _userAppService.GetAllUsers(userParams);
                 Response.AddPaginationHeader(result.CurrentPage, result.PageSize, result.TotalCount, result.TotalPages);
                 return Ok(result);

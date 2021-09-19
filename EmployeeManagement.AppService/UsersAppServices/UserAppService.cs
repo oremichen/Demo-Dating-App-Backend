@@ -71,7 +71,8 @@ namespace EmployeeManagement.AppService.UsersAppServices
            
                 var userList = await _userRepo.GetAllUsers();
 
-                var listResults = userList.AsQueryable().Select(s => new Members
+                var filter = userList.AsQueryable().Where(x => x.Name != userParams.CurrentUserName & x.Gender == userParams.Gender);
+                var listResults = filter.Select(s => new Members
                 {
                     Id = s.Id,
                     Name = s.Name,
