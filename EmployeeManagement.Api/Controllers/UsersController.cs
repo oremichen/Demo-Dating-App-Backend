@@ -109,6 +109,7 @@ namespace EmployeeManagement.Api.Controllers
             }
         }
 
+
         [HttpGet]
         [Authorize]
         [Route("GetUserById")]
