@@ -102,7 +102,7 @@ namespace EmployeeManagement.Api.Controllers
                 userParams.CurrentUserName = user.Name;
 
                 if (string.IsNullOrEmpty(userParams.Gender))
-                    userParams.CurrentUserName = user.Gender == "male" ? "female" : "male";
+                    userParams.Gender = user.Gender == "male" ? "female" : "male";
 
                 var result = await _userAppService.GetAllUsers(userParams);
                 Response.AddPaginationHeader(result.CurrentPage, result.PageSize, result.TotalCount, result.TotalPages);

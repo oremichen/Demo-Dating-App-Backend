@@ -71,7 +71,11 @@ namespace EmployeeManagement.AppService.UsersAppServices
            
                 var userList = await _userRepo.GetAllUsers();
 
-                var filter = userList.AsQueryable().Where(x => x.Name != userParams.CurrentUserName & x.Gender == userParams.Gender);
+                var minDob = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+                var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
+
+                var filter = userList.AsQueryable().Where(x => x.Name != userParams.CurrentUserName & x.Gender == userParams.Gender
+                & (x.DateOfBirth >= minDob & x.DateOfBirth <= maxDob));
                 var listResults = filter.Select(s => new Members
                 {
                     Id = s.Id,
