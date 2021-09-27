@@ -92,12 +92,16 @@ namespace EmployeeManagement.Api.Controllers
 
         [HttpGet]
         //[Authorize]
-        [Route("GetAllUsers")]
+        [Route("GetAllUsers/{loggedInUser}")]
         [Produces(typeof(PagedList<Members>))]
         public async Task<IActionResult> GetAllUsers([FromQuery]UserParams userParams, int loggedInUser)
         {
             try
             {
+                if (loggedInUser< 1)
+                {
+                    return BadRequest("Request parameter is invalid");
+                }
                 var user = await _userAppService.GetUsersById(loggedInUser);
                 userParams.CurrentUserName = user.Name;
 
@@ -171,6 +175,7 @@ namespace EmployeeManagement.Api.Controllers
                         Name = user.Name,
                         Email = user.Email,
                         Token = token,
+                        Gender = user.Gender,
                         Url = _userAppService.GetPhotoUrl(user.Id)
                     };
                     return Ok(usr);

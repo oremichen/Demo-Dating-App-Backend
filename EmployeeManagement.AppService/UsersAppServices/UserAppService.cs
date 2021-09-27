@@ -57,7 +57,8 @@ namespace EmployeeManagement.AppService.UsersAppServices
                     Id = (int)userId,
                     Name = user.Name,
                     Email = user.Email,
-                    Token = token
+                    Token = token,
+                    Gender = user.Gender
                 };
             }
             catch (Exception ex)
