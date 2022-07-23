@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System;
+using EmployeeManagement.Core;
 
 namespace EmployeeManagement.AppService.TokenService
 {
@@ -18,12 +19,13 @@ namespace EmployeeManagement.AppService.TokenService
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
 
-        public async Task<string> CreateToken(CreateUsersDto user)
+        public async Task<string> CreateToken(Users user)
         {
             //add claims
             var claim = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, user.Email)
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email)
             };
 
             //create credentials

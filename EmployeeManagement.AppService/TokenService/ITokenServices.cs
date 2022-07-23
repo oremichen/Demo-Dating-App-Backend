@@ -1,4 +1,5 @@
 ﻿using EmployeeManagement.AppService.Dtos;
+using EmployeeManagement.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,6 @@ namespace EmployeeManagement.AppService.TokenService
 {
     public interface ITokenServices
     {
-        Task<string> CreateToken(CreateUsersDto user);
+        Task<string> CreateToken(Users user);
     }
 }

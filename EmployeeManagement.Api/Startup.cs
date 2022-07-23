@@ -32,7 +32,7 @@ namespace EmployeeManagement.Api
             services.AddControllers();
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
-
+            services.AddScoped<LogUser>();
             services.AddRepoServices();
             services.AddAppServiceCollection();
 

@@ -128,6 +128,7 @@ namespace EmployeeManagement.Api.Controllers
         {
             try
             {
+               
                 var result = await _userAppService.GetUsersById(id);
                 return Ok(result);
             }
@@ -144,12 +145,12 @@ namespace EmployeeManagement.Api.Controllers
         [Produces(typeof(UserDto))]
         public async Task<IActionResult> Login([FromBody]LoginUser model)
         {
-            try
-            {
+          
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(new { message = "Invalid model" });
                 }
+
 
                 var result = await _userRepo.GetAllUsers();
                 var user = result.AsQueryable().Where(x => x.Email == model.Email).SingleOrDefault();
@@ -167,7 +168,7 @@ namespace EmployeeManagement.Api.Controllers
                     response.Password = model.Password;
 
                     //generate token
-                    var token = await _tokenServices.CreateToken(response);
+                    var token = await _tokenServices.CreateToken(user);
 
                     var usr =  new UserDto
                     {
@@ -183,12 +184,7 @@ namespace EmployeeManagement.Api.Controllers
 
                 return BadRequest("Login failed, password is not correct");
 
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("Login failed", e);
-                return BadRequest("Login failed");
-            }
+          
             #endregion
         }
     }

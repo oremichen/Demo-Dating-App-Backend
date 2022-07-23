@@ -50,7 +50,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
                 var userId = await _userRepo.CreateUsers(users);
 
                 //create token
-                var token = await _tokenServices.CreateToken(user);
+                var token = await _tokenServices.CreateToken(users);
 
                 return new UserDto
                 {
@@ -76,9 +76,9 @@ namespace EmployeeManagement.AppService.UsersAppServices
                 var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
 
                 var filter = userList.AsQueryable().Where(x => x.Name != userParams.CurrentUserName & 
-                x.Gender == userParams.Gender & 
-                (x.DateOfBirth >= minDob &
-                x.DateOfBirth <= maxDob));
+                x.Gender == userParams.Gender & (x.DateOfBirth >= minDob & x.DateOfBirth <= maxDob));
+
+             
                 var listResults = filter.Select(s => new Members
                 {
                     Id = s.Id,
@@ -98,6 +98,13 @@ namespace EmployeeManagement.AppService.UsersAppServices
                     Photo =  this.GetUserPhotos(s.Id).ToList(),
                     
                 });
+
+                //new switch expression from c# 8 upward
+                listResults = userParams.OrderBy switch
+                {
+                    "created" => listResults.OrderByDescending(u => u.DateCreated), 
+                    _ => listResults.OrderByDescending(u => u.LastAcvtive)
+                };
 
                 var memberList = await PagedList<Members>.CreateAsync(listResults, userParams.PageNumber, userParams.PageSize);
 
