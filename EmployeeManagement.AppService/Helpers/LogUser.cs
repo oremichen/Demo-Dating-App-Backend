@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using EmployeeManagement.Repository.UserRepository;
 using System.Linq;
+using System.Security.Claims;
 
 namespace EmployeeManagement.AppService.Helpers
 {
@@ -18,8 +19,7 @@ namespace EmployeeManagement.AppService.Helpers
 
             if (!resultContext.HttpContext.User.Identity.IsAuthenticated) return;
 
-            var claim = resultContext.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Contains("nameid"));
-            var id = claim.Value;
+            var id = resultContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var repo = resultContext.HttpContext.RequestServices.GetService<IUserRepo>();
             var user = await repo.GetUsersById(int.Parse(id));
             user.LastActive = DateTime.Now;
