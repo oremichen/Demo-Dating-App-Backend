@@ -5,6 +5,7 @@ using EmployeeManagement.AppService;
 using EmployeeManagement.AppService.AutoMapper;
 using EmployeeManagement.AppService.Helpers;
 using EmployeeManagement.Repository;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -70,6 +71,9 @@ namespace EmployeeManagement.Api
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
+
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("EmployeeConnection")));
+            services.AddHangfireServer();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,6 +88,7 @@ namespace EmployeeManagement.Api
             //}
 
             app.UseMiddleware<ExceptionMiddleware>();
+           
 
             app.UseHttpsRedirection();
 
@@ -93,13 +98,14 @@ namespace EmployeeManagement.Api
             app.UseCors(builder =>
             builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
-
             app.UseAuthorization();
+            app.UseHangfireDashboard();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-          
+
+           
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

@@ -11,6 +11,7 @@ using EmployeeManagement.AppService.PasswordHelper;
 using EmployeeManagement.AppService.TokenService;
 using EmployeeManagement.AppService.UsersAppServices;
 using EmployeeManagement.Repository.UserRepository;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -26,14 +27,17 @@ namespace EmployeeManagement.Api.Controllers
         private readonly IUserRepo _userRepo;
         private readonly IMapper _mapper;
         private readonly ITokenServices _tokenServices;
+        private readonly IBackgroundJobClient BackgroundJobClient;
 
-        public UsersController(ILogger<UsersController> logger, IUserAppService userAppService, IUserRepo userRepo, IMapper mapper, ITokenServices tokenServices)
+        public UsersController(ILogger<UsersController> logger, IUserAppService userAppService, 
+            IUserRepo userRepo, IMapper mapper, ITokenServices tokenServices, IBackgroundJobClient backgroundJobClient)
         {
             _logger = logger;
             _tokenServices = tokenServices;
             _userAppService = userAppService;
             _userRepo = userRepo;
             _mapper = mapper;
+            BackgroundJobClient = backgroundJobClient;
         }
 
         [HttpPost]
@@ -128,7 +132,8 @@ namespace EmployeeManagement.Api.Controllers
         {
             try
             {
-               
+                BackgroundJobClient.Enqueue(() => Console.WriteLine("Git here"));
+
                 var result = await _userAppService.GetUsersById(id);
                 return Ok(result);
             }
