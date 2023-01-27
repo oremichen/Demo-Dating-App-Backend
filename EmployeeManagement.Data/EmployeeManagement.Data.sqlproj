@@ -88,6 +88,7 @@
     <Build Include="StoredProcedures\Photos\UpdatePhoto.sql" />
     <Build Include="StoredProcedures\Photos\DeletePhoto.sql" />
     <Build Include="Tables\UserLike.sql" />
+    <Build Include="StoredProcedures\Users\Like.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="EmployeeManagement.Data.refactorlog" />

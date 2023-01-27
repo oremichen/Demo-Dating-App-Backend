@@ -30,6 +30,20 @@ namespace EmployeeManagement.Repository.UserRepository
             }
         }
 
+        public async Task<long> Like(UserLike model)
+        {
+            using (var conn = Connection)
+            {
+                var sql = $"[dbo].[Like] @userId, @likedBy";
+                var result = await conn.ExecuteScalarAsync<long>(sql, new
+                {
+                    model.UserId,
+                    model.LikedBy
+                });
+                return result;
+            }
+        }
+
         public async Task<long> CreateUsers(Users model)
         {
             using (var conn = Connection)
