@@ -169,6 +169,41 @@ namespace EmployeeManagement.AppService.UsersAppServices
            
         }
 
+        public async Task<UserLike> Like(int userId, int likedBy)
+        {
+            var userLike = new UserLike
+            {
+                LikedBy = likedBy,
+                UserId = userId
+            };
+
+            var like = await _userRepo.Like(userLike);
+            return like;
+        }
+
+        public async Task<List<LikeDto>> GetUserLikes(string predicate, int id)
+        {
+            var users = await _userRepo.GetUserLikes(predicate, id);
+            var userLikes = users.Select(user => new LikeDto
+            {
+                UserName = user.Name,
+                Age = user.Age,
+                KnownAs = user.KnownAs,
+                PhotoUrl = GetPhotoUrl(user.Id),
+                Id = user.Id,
+                City = user.City
+            }).ToList();
+
+            return userLikes;
+        }
+
+
+        public async Task<Users> GetUserWithLike(int id)
+        {
+            return await _userRepo.GetUserWithLike(id);
+        }
+
+
 
         #region Helper methods
         public string GetPhotoUrl(int id)

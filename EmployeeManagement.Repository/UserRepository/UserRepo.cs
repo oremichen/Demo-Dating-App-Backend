@@ -2,11 +2,9 @@
 using EmployeeManagement.Core;
 using EmployeeManagement.Repository.IStorage;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmployeeManagement.Repository.UserRepository
@@ -30,12 +28,12 @@ namespace EmployeeManagement.Repository.UserRepository
             }
         }
 
-        public async Task<long> Like(UserLike model)
+        public async Task<UserLike> Like(UserLike model)
         {
             using (var conn = Connection)
             {
                 var sql = $"[dbo].[Like] @userId, @likedBy";
-                var result = await conn.ExecuteScalarAsync<long>(sql, new
+                var result = await conn.ExecuteScalarAsync<UserLike>(sql, new
                 {
                     model.UserId,
                     model.LikedBy
@@ -43,6 +41,47 @@ namespace EmployeeManagement.Repository.UserRepository
                 return result;
             }
         }
+
+        public async Task<UserLike> GetUserLike(int userId, int likedBy)
+        {
+            using (var conn = Connection)
+            {
+                var sql = $"[dbo].[GetUserLikeByUserIdLikedBy] @userId, @likedBy";
+                var result = await conn.QuerySingleOrDefaultAsync<UserLike>(sql, new
+                {
+                    userId,
+                    likedBy
+                });
+                return result;
+            }
+        }
+
+        public async Task<Users> GetUserWithLike(int id)
+        {
+            using (var conn = Connection)
+            {
+                var sql = $"[dbo].[GetUserWithLike] @id";
+                var result = await conn.QuerySingleOrDefaultAsync<Users>(sql, new
+                {
+                    id
+                });
+                return result;
+            }
+        }
+
+        public async Task<IEnumerable<Users>> GetUserLikes(string predicate, int id)
+        {
+            string sql = "";
+            using (var conn = Connection)
+            { 
+                if(predicate == "Liked") { sql = $"[dbo].[GetAllUserLiked] @id"; }
+                if (predicate == "LikedBy") { sql = $"[dbo].[GetAllUserLikedBy] @id"; }
+                var result = await conn.QueryAsync<Users>(sql, new { id });
+                return result;
+            }
+        }
+
+
 
         public async Task<long> CreateUsers(Users model)
         {

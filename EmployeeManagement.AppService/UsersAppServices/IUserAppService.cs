@@ -16,5 +16,8 @@ namespace EmployeeManagement.AppService.UsersAppServices
         Task<Members> GetUsersById(int id);
         Task<bool> CheckIfNameExist(string email);
         string GetPhotoUrl(int id);
+        Task<UserLike> Like(int userId, int likedBy);
+        Task<List<LikeDto>> GetUserLikes(string predicate, int id);
+        Task<Users> GetUserWithLike(int id);
     }
 }
