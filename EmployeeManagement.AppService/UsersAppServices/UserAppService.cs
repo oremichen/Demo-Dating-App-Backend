@@ -169,7 +169,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
            
         }
 
-        public async Task<UserLike> Like(int userId, int likedBy)
+        public async Task<long> Like(int userId, int likedBy)
         {
             var userLike = new UserLike
             {
@@ -203,6 +203,10 @@ namespace EmployeeManagement.AppService.UsersAppServices
             return await _userRepo.GetUserWithLike(id);
         }
 
+        public async Task<UserLike> GetUserLike(int userId, int likeById)
+        {
+            return await _userRepo.GetUserLike(userId, likeById);
+        }
 
 
         #region Helper methods

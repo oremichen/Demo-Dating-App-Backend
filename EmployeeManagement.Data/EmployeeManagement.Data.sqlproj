@@ -92,12 +92,12 @@
     <Build Include="StoredProcedures\Users\GetUserLikeByUserIdLikedBy.sql" />
     <Build Include="StoredProcedures\Users\GetAllUserLiked.sql" />
     <Build Include="StoredProcedures\Users\GetUserWithLike.sql" />
+    <Build Include="StoredProcedures\Users\GetAllUserLikedBy.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="EmployeeManagement.Data.refactorlog" />
   </ItemGroup>
   <ItemGroup>
     <None Include="EmployeeManagement.Data.publish.xml" />
-    <None Include="StoredProcedures\Users\GetAllUserLikedBy.sql" />
   </ItemGroup>
 </Project>

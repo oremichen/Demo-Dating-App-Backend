@@ -172,8 +172,8 @@ namespace EmployeeManagement.Api.Controllers
                     return BadRequest("You cannot like yourself");
                 }
 
-                var userLike = await _userAppService.GetUserWithLike(likedBy);
-                if(userLike != null) { BadRequest("You have already liked this user"); }
+                var userLike = await _userAppService.GetUserLike(userId, likedBy);
+                if(userLike != null) { return BadRequest("You have already liked this user"); }
 
                 var result = await _userAppService.Like(userId, likedBy);
                 return Ok(result);

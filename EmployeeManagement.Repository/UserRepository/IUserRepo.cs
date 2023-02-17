@@ -13,7 +13,7 @@ namespace EmployeeManagement.Repository.UserRepository
         Task<IEnumerable<Users>> GetAllUsers();
         Task<Users> GetUsersById(int id);
         Task<Users> GetUserByEmail(string email);
-        Task<UserLike> Like(UserLike model);
+        Task<long> Like(UserLike model);
         Task<UserLike> GetUserLike(int userId, int likedBy);
         Task<IEnumerable<Users>> GetUserLikes(string predicate, int id);
         Task<Users> GetUserWithLike(int id);
