@@ -197,7 +197,7 @@ namespace EmployeeManagement.AppService.UsersAppServices
             return userLikes;
         }
 
-
+        //this returns the user that has liked another user
         public async Task<Users> GetUserWithLike(int id)
         {
             return await _userRepo.GetUserWithLike(id);

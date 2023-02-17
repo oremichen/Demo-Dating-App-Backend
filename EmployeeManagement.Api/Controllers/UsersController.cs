@@ -10,6 +10,7 @@ using EmployeeManagement.AppService.Helpers;
 using EmployeeManagement.AppService.PasswordHelper;
 using EmployeeManagement.AppService.TokenService;
 using EmployeeManagement.AppService.UsersAppServices;
+using EmployeeManagement.Core;
 using EmployeeManagement.Repository.UserRepository;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
@@ -140,6 +141,53 @@ namespace EmployeeManagement.Api.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("userwithlikes/{predicate}/{id}")]
+        [Produces(typeof(List<LikeDto>))]
+        public async Task<IActionResult> UserWithLikes(string predicate, int id)
+        {
+            try
+            {
+                var result = await _userAppService.GetUserLikes(predicate, id);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("something went wrong", e);
+                throw e;
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("{userId}/{likedBy}")]
+        [Produces(typeof(UserLike))]
+        public async Task<IActionResult> Like(int userId, int likedBy)
+        {
+            try
+            {
+                if (userId == likedBy)
+                {
+                    return BadRequest("You cannot like yourself");
+                }
+
+                var userLike = await _userAppService.GetUserWithLike(likedBy);
+                if(userLike != null) { BadRequest("You have already liked this user"); }
+
+                var result = await _userAppService.Like(userId, likedBy);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("something went wrong", e);
+                throw e;
+            }
+        }
+
+
+
+
         #region Login method
         [HttpPost]
         [Route("Login")]
@@ -152,9 +200,7 @@ namespace EmployeeManagement.Api.Controllers
                     return BadRequest(new { message = "Invalid model" });
                 }
 
-
-                var result = await _userRepo.GetAllUsers();
-                var user = result.AsQueryable().Where(x => x.Email == model.Email).SingleOrDefault();
+                var user = await _userRepo.GetUserByEmail(model.Email);
                 if (user == null) { return Unauthorized("You are not authorised, please register"); }
 
                 //get the new hashed password of the user by the using the password salt in the db
