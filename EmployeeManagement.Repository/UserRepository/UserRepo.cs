@@ -74,8 +74,8 @@ namespace EmployeeManagement.Repository.UserRepository
             string sql = "";
             using (var conn = Connection)
             { 
-                if(predicate == "Liked") { sql = $"[dbo].[GetAllUserLiked] @id"; }
-                if (predicate == "LikedBy") { sql = $"[dbo].[GetAllUserLikedBy] @id"; }
+                if(predicate == "liked") { sql = $"[dbo].[GetAllUserLiked] @id"; }
+                if (predicate == "likedBy") { sql = $"[dbo].[GetAllUserLikedBy] @id"; }
                 var result = await conn.QueryAsync<Users>(sql, new { id });
                 return result;
             }
