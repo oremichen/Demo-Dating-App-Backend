@@ -93,6 +93,7 @@
     <Build Include="StoredProcedures\Users\GetAllUserLiked.sql" />
     <Build Include="StoredProcedures\Users\GetUserWithLike.sql" />
     <Build Include="StoredProcedures\Users\GetAllUserLikedBy.sql" />
+    <Build Include="Tables\Message.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="EmployeeManagement.Data.refactorlog" />
