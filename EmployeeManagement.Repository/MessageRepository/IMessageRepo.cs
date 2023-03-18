@@ -8,10 +8,10 @@ namespace EmployeeManagement.Repository.MessageRepository
 {
     public interface IMessageRepo
     {
-        Task AddMessage(Message message);
+        Task<long> AddMessage(Message message);
         Task DeleteMessage(Message message);
         Task<Message> GetMessage(int id);
         Task<List<Message>> GetUserMessages();
-        Task<IEnumerable<Message>> GetMessageThread();
+        Task<List<Message>> GetMessageThread();
     }
 }

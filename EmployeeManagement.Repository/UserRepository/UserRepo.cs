@@ -12,12 +12,10 @@ namespace EmployeeManagement.Repository.UserRepository
     public class UserRepo : IUserRepo
     {
         private readonly ConnectionStrings _appSettings;
-        private readonly IStorageRepo _storageRepo;
 
-        public UserRepo(IOptions<ConnectionStrings> options, IStorageRepo storageRepo)
+        public UserRepo(IOptions<ConnectionStrings> options)
         {
             _appSettings = options.Value;
-            _storageRepo = storageRepo;
         }
 
         public IDbConnection Connection
