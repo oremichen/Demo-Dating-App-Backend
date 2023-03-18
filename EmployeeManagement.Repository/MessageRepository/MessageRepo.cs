@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -85,7 +86,7 @@ namespace EmployeeManagement.Repository.MessageRepository
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Message>> GetUserMessages()
+        public async Task<IQueryable<Message>> GetUserMessages()
         {
             var models = await _storageRepo.UseConnection(conn =>
             {
@@ -94,7 +95,7 @@ namespace EmployeeManagement.Repository.MessageRepository
                 return result;
             });
 
-            return models;
+            return models.AsQueryable();
         }
     }
 }
