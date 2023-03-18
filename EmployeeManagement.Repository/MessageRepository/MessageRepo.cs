@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using EmployeeManagement.Core;
+using EmployeeManagement.Repository.IStorage;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -12,28 +13,21 @@ namespace EmployeeManagement.Repository.MessageRepository
 {
     public class MessageRepo : IMessageRepo
     {
-        private readonly ConnectionStrings _appSettings;
+        private readonly IStorageRepo _storageRepo;
 
-        public MessageRepo(IOptions<ConnectionStrings> options)
+        public MessageRepo(IStorageRepo storageRepo)
         {
-            _appSettings = options.Value;
+            _storageRepo = storageRepo;
         }
 
-        public IDbConnection Connection
-        {
-            get
-            {
-                return new SqlConnection(_appSettings.EmployeeConnection);
-            }
-        }
-
+       
         public async Task<long> AddMessage(Message message)
         {
-            using (var conn = Connection)
+            var res = await _storageRepo.UseConnection(conn =>
             {
                 var sql = $"[dbo].[AddMessage] @messageSent, @recepientId, @recepientName, @senderId, @senderUsername, " +
-                    $"@recipientDeleted, @senderDeleted, @content, @deateRead" ;
-                var result = await conn.ExecuteScalarAsync<long>(sql, new
+                    $"@recipientDeleted, @senderDeleted, @content, @deateRead";
+                var result = conn.ExecuteScalarAsync<long>(sql, new
                 {
                     message.MessageSent,
                     message.RecepientId,
@@ -44,35 +38,63 @@ namespace EmployeeManagement.Repository.MessageRepository
                     message.SenderDeleted,
                     message.Content,
                     message.DateRead
-
                 });
                 return result;
-            }
+            });
+
+            return await Task.FromResult(res);
+           
         }
         
-        public Task DeleteMessage(Message message)
+        public async Task DeleteMessage(int id)
+        {
+            _storageRepo.UseConnection(conn =>
+            {
+                var sql = $"[dbo].[DeleteMessage] @id";
+                var result = conn.ExecuteScalar(sql, new
+                {
+                    id
+                });
+            });
+            await Task.CompletedTask;
+        }
+
+        public async Task<Message> GetMessage(int id)
+        {
+            var message = await _storageRepo.UseConnection(conn =>
+            {
+                var sql = $"[dbo].[GetMessage] @id";
+                var result = conn.QueryFirstOrDefaultAsync<Message>(sql, new
+                {
+                    id
+                });
+
+                return result;
+            });
+
+            return await Task.FromResult(message);
+        }
+
+        public Task<IEnumerable<Message>> GetMessageThread(int currentUserId, int recepientId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Message> GetMessage(int id)
+        public Task<IEnumerable<Message>> GetMessageForUser()
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Message>> GetMessageThread()
+        public async Task<IEnumerable<Message>> GetUserMessages()
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<Message>> GetUserMessages()
-        {
-            using (var conn = Connection)
+            var models = await _storageRepo.UseConnection(conn =>
             {
                 var sql = $"[dbo].[GetMessages]";
-                var result = await conn.QueryAsync<Message>(sql);
-                return result.AsList();
-            }
+                var result = conn.QueryAsync<Message>(sql);
+                return result;
+            });
+
+            return models;
         }
     }
 }
