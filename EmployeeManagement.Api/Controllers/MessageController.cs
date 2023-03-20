@@ -39,9 +39,15 @@ namespace EmployeeManagement.Api.Controllers
         [Route("messages")]
         public async Task<ActionResult<List<MessageDto>>> GetMessageForUser([FromQuery] MessageParams messageParams)
         {
-            var res = await _messageService.GetMessageForUser(messageParams);
-            return Ok(res);
-
+            try
+            {
+                var res = await _messageService.GetMessageForUser(messageParams);
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
 

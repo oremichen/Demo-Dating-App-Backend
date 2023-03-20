@@ -15,13 +15,23 @@ namespace EmployeeManagement.Repository.MessageRepository
     public class MessageRepo : IMessageRepo
     {
         private readonly IStorageRepo _storageRepo;
+        private readonly ConnectionStrings _appSettings;
 
-        public MessageRepo(IStorageRepo storageRepo)
+        public MessageRepo(IStorageRepo storageRepo, IOptions<ConnectionStrings> options)
         {
             _storageRepo = storageRepo;
+            _appSettings = options.Value;
         }
 
-       
+        public IDbConnection Connection
+        {
+            get
+            {
+                return new SqlConnection(_appSettings.EmployeeConnection);
+            }
+        }
+
+
         public async Task<long> AddMessage(Message message)
         {
             var res = await _storageRepo.UseConnection(conn =>
@@ -104,19 +114,17 @@ namespace EmployeeManagement.Repository.MessageRepository
 
         public async Task<IEnumerable<Message>> GetMessageThread(int currentUserId, int recepientId)
         {
-            var messages = await _storageRepo.UseConnection(conn =>
+            using (var conn = Connection)
             {
                 var sql = $"[dbo].[GetMessageThread] @currentUserId, @recepientId";
-                var result = conn.QueryAsync<Message>(sql, new
+                var result = await conn.QueryAsync<Message>(sql, new
                 {
                     currentUserId,
                     recepientId
                 });
 
                 return result;
-            });
-
-            return await Task.FromResult(messages);
+            }
         }
 
         public Task<IEnumerable<Message>> GetMessageForUser()
@@ -126,14 +134,12 @@ namespace EmployeeManagement.Repository.MessageRepository
 
         public async Task<IQueryable<Message>> GetUserMessages()
         {
-            var models = await _storageRepo.UseConnection(conn =>
+            using (var conn = Connection)
             {
                 var sql = $"[dbo].[GetMessages]";
-                var result = conn.QueryAsync<Message>(sql);
-                return result;
-            });
-
-            return models.AsQueryable();
+                var result = await conn.QueryAsync<Message>(sql);
+                return result.AsQueryable();
+            }
         }
     }
 }
