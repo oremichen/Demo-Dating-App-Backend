@@ -63,8 +63,6 @@ namespace EmployeeManagement.AppService.MessagesAppService
             };
         }
 
-     
-
         public async Task<List<MessageDto>> GetMessageThread(int currentUserId, int recepientId)
         {
             var messages = await _messageRepo.GetMessageThread(currentUserId, recepientId);
@@ -75,8 +73,27 @@ namespace EmployeeManagement.AppService.MessagesAppService
                 foreach (var message in unreadMessages)
                 {
                     message.DateRead = DateTime.Now;
+                    await _messageRepo.UpdateMessage(message);
                 }
             }
+
+            var msgs = messages.Select(m => new MessageDto
+            {
+
+                RecepientId = m.RecepientId,
+                SenderDeleted = m.SenderDeleted,
+                SenderId = m.SenderId,
+                Content = m.Content,
+                DateRead = m.DateRead,
+                RecepientName = m.RecepientName,
+                Id = m.Id,
+                RecipientDeleted = m.RecipientDeleted,
+                MessageSent = m.MessageSent,
+                SenderUsername = m.SenderUsername,
+                SenderPhotoUrl = _userAppService.GetPhotoUrl(m.SenderId)
+            });
+
+            return msgs.ToList();
         }
 
         public Task<List<Message>> GetUserMessages()

@@ -13,7 +13,7 @@ namespace EmployeeManagement.AppService.MessagesAppService
         Task DeleteMessage(int id);
         Task<MessageDto> GetMessage(int id);
         Task<List<Message>> GetUserMessages();
-        Task<List<Message>> GetMessageThread(int currentUserId, int recepientId);
+        Task<List<MessageDto>> GetMessageThread(int currentUserId, int recepientId);
         Task<List<MessageDto>> GetMessageForUser(MessageParams messageParams);
     }
 }

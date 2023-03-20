@@ -15,5 +15,6 @@ namespace EmployeeManagement.Repository.MessageRepository
         Task<IQueryable<Message>> GetUserMessages();
         Task<IEnumerable<Message>> GetMessageThread(int currentUserId, int recepientId);
         Task<IEnumerable<Message>> GetMessageForUser();
+        Task UpdateMessage(Message message);
     }
 }
