@@ -20,6 +20,6 @@ BEGIN
 
 	values
 	(@messageSent, @recepientId, @recepientName, @senderId, @senderUsername, @recipientDeleted,
-	@senderDeleted, @content, @deateRead)
+	@senderDeleted, @content, @dateRead)
 
 end

@@ -93,7 +93,7 @@ namespace EmployeeManagement.AppService.MessagesAppService
                 SenderPhotoUrl = _userAppService.GetPhotoUrl(m.SenderId)
             });
 
-            return msgs.ToList();
+            return msgs.OrderByDescending(x=> x.MessageSent).ToList();
         }
 
         public Task<List<Message>> GetUserMessages()

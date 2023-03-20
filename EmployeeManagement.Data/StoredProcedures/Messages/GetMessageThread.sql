@@ -6,5 +6,4 @@ BEGIN
 	SELECT * FROM [Message]
 	where ([SenderId] = @currentUserId and [RecepientId] = @recepientId) or
 	([SenderId] = @recepientId and [RecepientId] = @currentUserId)
-	ORDER BY [MessageSent]
 END

@@ -44,13 +44,16 @@ namespace EmployeeManagement.Api.Controllers
 
         }
 
-       
-        [HttpPost]
-        public void Post([FromBody] string value)
+
+        [HttpGet]
+        [Route("messageThread/{currentUserId}/{recepientId}")]
+        public async Task<ActionResult<List<MessageDto>>> GetMessageThread(int currentUserId, int recepientId)
         {
+            var res = await _messageService.GetMessageThread(currentUserId, recepientId);
+            return Ok(res);
         }
 
-       
+
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
