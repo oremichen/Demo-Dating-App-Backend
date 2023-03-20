@@ -1,6 +1,7 @@
 ﻿using EmployeeManagement.Api.ControllerBase;
 using EmployeeManagement.AppService.Dtos;
 using EmployeeManagement.AppService.MessagesAppService;
+using EmployeeManagement.Core;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -34,10 +35,13 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet]
+        [Route("messages")]
+        public async Task<ActionResult<List<MessageDto>>> GetMessageForUser([FromQuery] MessageParams messageParams)
         {
-            return "value";
+            var res = await _messageService.GetMessageForUser(messageParams);
+            return Ok(res);
+
         }
 
        

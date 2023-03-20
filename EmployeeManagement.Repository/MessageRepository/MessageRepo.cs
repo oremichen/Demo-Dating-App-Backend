@@ -76,9 +76,21 @@ namespace EmployeeManagement.Repository.MessageRepository
             return await Task.FromResult(message);
         }
 
-        public Task<IEnumerable<Message>> GetMessageThread(int currentUserId, int recepientId)
+        public async Task<IEnumerable<Message>> GetMessageThread(int currentUserId, int recepientId)
         {
-            throw new NotImplementedException();
+            var messages = await _storageRepo.UseConnection(conn =>
+            {
+                var sql = $"[dbo].[GetMessageThread] @currentUserId, @recepientId";
+                var result = conn.QueryAsync<Message>(sql, new
+                {
+                    currentUserId,
+                    recepientId
+                });
+
+                return result;
+            });
+
+            return await Task.FromResult(messages);
         }
 
         public Task<IEnumerable<Message>> GetMessageForUser()
