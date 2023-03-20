@@ -98,6 +98,8 @@
     <Build Include="StoredProcedures\Messages\GetMessageThread.sql" />
     <Build Include="StoredProcedures\Messages\DeleteMessage.sql" />
     <Build Include="StoredProcedures\Messages\GetMessages.sql" />
+    <Build Include="StoredProcedures\Messages\AddMessage.sql" />
+    <Build Include="StoredProcedures\Messages\UpdateMessage.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="EmployeeManagement.Data.refactorlog" />

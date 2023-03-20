@@ -65,9 +65,18 @@ namespace EmployeeManagement.AppService.MessagesAppService
 
      
 
-        public Task<List<Message>> GetMessageThread(int currentUserId, int recepientId)
+        public async Task<List<MessageDto>> GetMessageThread(int currentUserId, int recepientId)
         {
-            throw new NotImplementedException();
+            var messages = await _messageRepo.GetMessageThread(currentUserId, recepientId);
+            var unreadMessages = messages.Where(m => m.DateRead == null && m.RecepientId == recepientId).ToList();
+
+            if (unreadMessages.Any())
+            {
+                foreach (var message in unreadMessages)
+                {
+                    message.DateRead = DateTime.Now;
+                }
+            }
         }
 
         public Task<List<Message>> GetUserMessages()

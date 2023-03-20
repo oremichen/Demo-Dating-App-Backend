@@ -27,7 +27,7 @@ namespace EmployeeManagement.Repository.MessageRepository
             var res = await _storageRepo.UseConnection(conn =>
             {
                 var sql = $"[dbo].[AddMessage] @messageSent, @recepientId, @recepientName, @senderId, @senderUsername, " +
-                    $"@recipientDeleted, @senderDeleted, @content, @deateRead";
+                    $"@recipientDeleted, @senderDeleted, @content, @dateRead";
                 var result = conn.ExecuteScalarAsync<long>(sql, new
                 {
                     message.MessageSent,
@@ -45,6 +45,32 @@ namespace EmployeeManagement.Repository.MessageRepository
 
             return await Task.FromResult(res);
            
+        }
+
+        public async Task UpdateMessage(Message message)
+        {
+             _storageRepo.UseConnection(conn =>
+            {
+
+                var sql = $"[dbo].[UpdateMessage] @id, @messageSent, @recepientId, @recepientName, @senderId, @senderUsername, " +
+                    $"@recipientDeleted, @senderDeleted, @content, @dateRead";
+                conn.ExecuteScalar<long>(sql, new
+                {
+                    message.Id,
+                    message.MessageSent,
+                    message.RecepientId,
+                    message.RecepientName,
+                    message.SenderId,
+                    message.SenderUsername,
+                    message.RecipientDeleted,
+                    message.SenderDeleted,
+                    message.Content,
+                    message.DateRead
+
+                });
+
+            });
+            await Task.CompletedTask;
         }
         
         public async Task DeleteMessage(int id)
