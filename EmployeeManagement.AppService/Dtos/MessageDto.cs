@@ -17,5 +17,6 @@ namespace EmployeeManagement.AppService.Dtos
         public bool SenderDeleted { get; set; }
         public bool RecipientDeleted { get; set; }
         public string SenderPhotoUrl { get; set; }
+        public string RecepientPhotoUrl { get; set; }
     }
 }

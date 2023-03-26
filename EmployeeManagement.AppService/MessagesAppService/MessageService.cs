@@ -79,7 +79,6 @@ namespace EmployeeManagement.AppService.MessagesAppService
 
             var msgs = messages.Select(m => new MessageDto
             {
-
                 RecepientId = m.RecepientId,
                 SenderDeleted = m.SenderDeleted,
                 SenderId = m.SenderId,
@@ -90,6 +89,7 @@ namespace EmployeeManagement.AppService.MessagesAppService
                 RecipientDeleted = m.RecipientDeleted,
                 MessageSent = m.MessageSent,
                 SenderUsername = m.SenderUsername,
+                RecepientPhotoUrl = _userAppService.GetPhotoUrl(m.RecepientId),
                 SenderPhotoUrl = _userAppService.GetPhotoUrl(m.SenderId)
             });
 
