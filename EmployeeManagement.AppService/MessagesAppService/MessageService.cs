@@ -35,6 +35,8 @@ namespace EmployeeManagement.AppService.MessagesAppService
                 SenderUsername = sender.Name,
                 RecipientDeleted = false,
                 SenderDeleted = false,
+                MessageSent = DateTime.Now,
+                DateRead = null
             };
             return await _messageRepo.AddMessage(mess);
         }

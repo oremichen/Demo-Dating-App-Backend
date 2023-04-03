@@ -27,11 +27,18 @@ namespace EmployeeManagement.Api.Controllers
         [Route("add")]
         public async Task<ActionResult<long>> AddMessage(CreateMessageDto createMessageDto)
         {
-            var response = await _messageService.AddMessage(createMessageDto);
-            if (response > 0)
-                return Ok(response);
+            try
+            {
+                var response = await _messageService.AddMessage(createMessageDto);
+                if (response > 0)
+                    return Ok(response);
 
-            else return BadRequest("Failed to send message");
+                else return BadRequest("Failed to send message");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message); ;
+            }
         }
 
         

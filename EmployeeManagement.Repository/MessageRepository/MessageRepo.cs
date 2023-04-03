@@ -34,11 +34,11 @@ namespace EmployeeManagement.Repository.MessageRepository
 
         public async Task<long> AddMessage(Message message)
         {
-            var res = await _storageRepo.UseConnection(conn =>
+            using (var conn = Connection)
             {
                 var sql = $"[dbo].[AddMessage] @messageSent, @recepientId, @recepientName, @senderId, @senderUsername, " +
-                    $"@recipientDeleted, @senderDeleted, @content, @dateRead";
-                var result = conn.ExecuteScalarAsync<long>(sql, new
+                     $"@recipientDeleted, @senderDeleted, @content, @dateRead";
+                var result = await conn.ExecuteScalarAsync<long>(sql, new
                 {
                     message.MessageSent,
                     message.RecepientId,
@@ -50,10 +50,10 @@ namespace EmployeeManagement.Repository.MessageRepository
                     message.Content,
                     message.DateRead
                 });
-                return result;
-            });
 
-            return await Task.FromResult(res);
+                return result;
+            }
+
            
         }
 
