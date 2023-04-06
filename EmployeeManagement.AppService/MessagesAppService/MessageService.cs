@@ -21,7 +21,7 @@ namespace EmployeeManagement.AppService.MessagesAppService
             _userAppService = userAppService;
         }
 
-        public async Task<long> AddMessage(CreateMessageDto message)
+        public async Task<MessageDto> AddMessage(CreateMessageDto message)
         {
             var sender = await _userAppService.GetUsersById(message.SenderId);
             var recepient = await _userAppService.GetUsersById(message.RecepientId);
@@ -38,7 +38,8 @@ namespace EmployeeManagement.AppService.MessagesAppService
                 MessageSent = DateTime.Now,
                 DateRead = null
             };
-            return await _messageRepo.AddMessage(mess);
+            var id = await _messageRepo.AddMessage(mess);
+            return await GetMessage(Convert.ToInt32(id));
         }
 
         public async Task DeleteMessage(int id)
@@ -95,7 +96,7 @@ namespace EmployeeManagement.AppService.MessagesAppService
                 SenderPhotoUrl = _userAppService.GetPhotoUrl(m.SenderId)
             });
 
-            return msgs.OrderByDescending(x=> x.MessageSent).ToList();
+            return msgs.OrderBy(x=> x.MessageSent).ToList();
         }
 
         public Task<List<Message>> GetUserMessages()

@@ -25,12 +25,12 @@ namespace EmployeeManagement.Api.Controllers
 
         [HttpPost]
         [Route("add")]
-        public async Task<ActionResult<long>> AddMessage(CreateMessageDto createMessageDto)
+        public async Task<ActionResult<MessageDto>> AddMessage(CreateMessageDto createMessageDto)
         {
             try
             {
                 var response = await _messageService.AddMessage(createMessageDto);
-                if (response > 0)
+                if (response != null)
                     return Ok(response);
 
                 else return BadRequest("Failed to send message");

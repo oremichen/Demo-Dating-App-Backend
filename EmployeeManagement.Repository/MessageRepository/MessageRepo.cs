@@ -14,12 +14,10 @@ namespace EmployeeManagement.Repository.MessageRepository
 {
     public class MessageRepo : IMessageRepo
     {
-        private readonly IStorageRepo _storageRepo;
         private readonly ConnectionStrings _appSettings;
 
-        public MessageRepo(IStorageRepo storageRepo, IOptions<ConnectionStrings> options)
+        public MessageRepo(IOptions<ConnectionStrings> options)
         {
-            _storageRepo = storageRepo;
             _appSettings = options.Value;
         }
 
@@ -53,15 +51,12 @@ namespace EmployeeManagement.Repository.MessageRepository
 
                 return result;
             }
-
-           
         }
 
         public async Task UpdateMessage(Message message)
         {
-             _storageRepo.UseConnection(conn =>
+            using (var conn = Connection)
             {
-
                 var sql = $"[dbo].[UpdateMessage] @id, @messageSent, @recepientId, @recepientName, @senderId, @senderUsername, " +
                     $"@recipientDeleted, @senderDeleted, @content, @dateRead";
                 conn.ExecuteScalar<long>(sql, new
@@ -78,38 +73,33 @@ namespace EmployeeManagement.Repository.MessageRepository
                     message.DateRead
 
                 });
-
-            });
-            await Task.CompletedTask;
+            }
         }
         
         public async Task DeleteMessage(int id)
         {
-            _storageRepo.UseConnection(conn =>
+            using (var conn = Connection)
             {
                 var sql = $"[dbo].[DeleteMessage] @id";
                 var result = conn.ExecuteScalar(sql, new
                 {
                     id
                 });
-            });
-            await Task.CompletedTask;
+            }
         }
 
         public async Task<Message> GetMessage(int id)
         {
-            var message = await _storageRepo.UseConnection(conn =>
+            using (var conn = Connection)
             {
                 var sql = $"[dbo].[GetMessage] @id";
-                var result = conn.QueryFirstOrDefaultAsync<Message>(sql, new
+                var result = await conn.QueryFirstOrDefaultAsync<Message>(sql, new
                 {
                     id
                 });
 
                 return result;
-            });
-
-            return await Task.FromResult(message);
+            }
         }
 
         public async Task<IEnumerable<Message>> GetMessageThread(int currentUserId, int recepientId)

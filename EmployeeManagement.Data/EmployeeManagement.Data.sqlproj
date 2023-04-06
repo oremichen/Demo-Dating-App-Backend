@@ -100,6 +100,7 @@
     <Build Include="StoredProcedures\Messages\GetMessages.sql" />
     <Build Include="StoredProcedures\Messages\AddMessage.sql" />
     <Build Include="StoredProcedures\Messages\UpdateMessage.sql" />
+    <Build Include="StoredProcedures\Messages\GetMessage.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="EmployeeManagement.Data.refactorlog" />

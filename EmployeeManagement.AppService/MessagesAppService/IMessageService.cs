@@ -9,7 +9,7 @@ namespace EmployeeManagement.AppService.MessagesAppService
 {
     public interface IMessageService
     {
-        Task<long> AddMessage(CreateMessageDto message);
+        Task<MessageDto> AddMessage(CreateMessageDto message);
         Task DeleteMessage(int id);
         Task<MessageDto> GetMessage(int id);
         Task<List<Message>> GetUserMessages();
