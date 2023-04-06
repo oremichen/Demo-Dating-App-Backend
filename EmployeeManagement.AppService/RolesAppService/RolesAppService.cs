@@ -102,7 +102,7 @@ namespace EmployeeManagement.AppService.RolesAppServices
                  await _roleRepo.DeleteRole(id);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

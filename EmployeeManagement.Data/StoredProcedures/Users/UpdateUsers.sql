@@ -8,7 +8,7 @@
 	@dateofbirth datetime2(7),
     @knownas nvarchar(MAX),
 	@lastactive nvarchar(MAX), 
-	@gender nvarchar(3), 
+	@gender nvarchar(10), 
 	@introduction nvarchar(MAX), 
 	@lookingfor nvarchar(MAX), 
 	@interests nvarchar(MAX),

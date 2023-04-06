@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagement.Api.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class RolesController : BaseController
     {
         private readonly IRolesAppService _rolesAppService;

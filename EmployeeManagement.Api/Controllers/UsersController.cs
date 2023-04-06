@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using EmployeeManagement.Api.ControllerBase;
 using EmployeeManagement.AppService.Dtos;
+using EmployeeManagement.AppService.Helpers;
 using EmployeeManagement.AppService.PasswordHelper;
 using EmployeeManagement.AppService.TokenService;
 using EmployeeManagement.AppService.UsersAppServices;
+using EmployeeManagement.Core;
 using EmployeeManagement.Repository.UserRepository;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -28,7 +29,8 @@ namespace EmployeeManagement.Api.Controllers
         private readonly IMapper _mapper;
         private readonly ITokenServices _tokenServices;
 
-        public UsersController(ILogger<UsersController> logger, IUserAppService userAppService, IUserRepo userRepo, IMapper mapper, ITokenServices tokenServices)
+        public UsersController(ILogger<UsersController> logger, IUserAppService userAppService, 
+            IUserRepo userRepo, IMapper mapper, ITokenServices tokenServices)
         {
             _logger = logger;
             _tokenServices = tokenServices;
@@ -92,14 +94,25 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        [Route("GetAllUsers")]
-        [Produces(typeof(List<Members>))]
-        public async Task<IActionResult> GetAllUsers()
+        //[Authorize]
+        [Route("GetAllUsers/{loggedInUser}")]
+        [Produces(typeof(PagedList<Members>))]
+        public async Task<IActionResult> GetAllUsers([FromQuery]UserParams userParams, int loggedInUser)
         {
             try
             {
-                var result = await _userAppService.GetAllUsers();
+                if (loggedInUser< 1)
+                {
+                    return BadRequest("Request parameter is invalid");
+                }
+                var user = await _userAppService.GetUsersById(loggedInUser);
+                userParams.CurrentUserName = user.Name;
+
+                if (string.IsNullOrEmpty(userParams.Gender))
+                    userParams.Gender = user.Gender == "male" ? "female" : "male";
+
+                var result = await _userAppService.GetAllUsers(userParams);
+                Response.AddPaginationHeader(result.CurrentPage, result.PageSize, result.TotalCount, result.TotalPages);
                 return Ok(result);
             }
             catch (Exception e)
@@ -108,6 +121,7 @@ namespace EmployeeManagement.Api.Controllers
                 throw e;
             }
         }
+
 
         [HttpGet]
         [Authorize]
@@ -127,21 +141,66 @@ namespace EmployeeManagement.Api.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("userwithlikes/{predicate}/{id}")]
+        [Produces(typeof(List<LikeDto>))]
+        public async Task<IActionResult> UserWithLikes(string predicate, int id)
+        {
+            try
+            {
+                var result = await _userAppService.GetUserLikes(predicate, id);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("something went wrong", e);
+                throw e;
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("{userId}/{likedBy}")]
+        [Produces(typeof(UserLike))]
+        public async Task<IActionResult> Like(int userId, int likedBy)
+        {
+            try
+            {
+                if (userId == likedBy)
+                {
+                    return BadRequest("You cannot like yourself");
+                }
+
+                var userLike = await _userAppService.GetUserLike(userId, likedBy);
+                if(userLike != null) { return BadRequest("You have already liked this user"); }
+
+                var result = await _userAppService.Like(userId, likedBy);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("something went wrong", e);
+                throw e;
+            }
+        }
+
+
+
+
         #region Login method
         [HttpPost]
         [Route("Login")]
         [Produces(typeof(UserDto))]
         public async Task<IActionResult> Login([FromBody]LoginUser model)
         {
-            try
-            {
+          
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(new { message = "Invalid model" });
                 }
 
-                var result = await _userRepo.GetAllUsers();
-                var user = result.AsQueryable().Where(x => x.Email == model.Email).SingleOrDefault();
+                var user = await _userRepo.GetUserByEmail(model.Email);
                 if (user == null) { return Unauthorized("You are not authorised, please register"); }
 
                 //get the new hashed password of the user by the using the password salt in the db
@@ -156,26 +215,23 @@ namespace EmployeeManagement.Api.Controllers
                     response.Password = model.Password;
 
                     //generate token
-                    var token = await _tokenServices.CreateToken(response);
+                    var token = await _tokenServices.CreateToken(user);
 
                     var usr =  new UserDto
                     {
                         Id = user.Id,
                         Name = user.Name,
                         Email = user.Email,
-                        Token = token
+                        Token = token,
+                        Gender = user.Gender,
+                        Url = _userAppService.GetPhotoUrl(user.Id)
                     };
                     return Ok(usr);
                 }
 
                 return BadRequest("Login failed, password is not correct");
 
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("Login failed", e);
-                return BadRequest("Login failed");
-            }
+          
             #endregion
         }
     }

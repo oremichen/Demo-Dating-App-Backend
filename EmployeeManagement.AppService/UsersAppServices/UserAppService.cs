@@ -2,7 +2,6 @@
 using EmployeeManagement.AppService.Dtos;
 using EmployeeManagement.AppService.Helpers;
 using EmployeeManagement.AppService.PasswordHelper;
-using EmployeeManagement.AppService.PhotoAppService;
 using EmployeeManagement.AppService.TokenService;
 using EmployeeManagement.Core;
 using EmployeeManagement.Repository.PhotoRepository;
@@ -10,8 +9,6 @@ using EmployeeManagement.Repository.UserRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmployeeManagement.AppService.UsersAppServices
@@ -44,19 +41,24 @@ namespace EmployeeManagement.AppService.UsersAppServices
                     Email = user.Email,
                     PasswordHash = passwd,
                     PasswordSalt = passwdsalt,
-                    DateCreated = user.DateCreated
+                    DateCreated = user.DateCreated,
+                    KnownAs = user.KnownAs,
+                    DateOfBirth = user.DateOfBirth,
+                    City = user.City,
+                    Gender = user.Gender
                 };
                 var userId = await _userRepo.CreateUsers(users);
 
                 //create token
-                var token = await _tokenServices.CreateToken(user);
+                var token = await _tokenServices.CreateToken(users);
 
                 return new UserDto
                 {
                     Id = (int)userId,
                     Name = user.Name,
                     Email = user.Email,
-                    Token = token
+                    Token = token,
+                    Gender = user.Gender
                 };
             }
             catch (Exception ex)
@@ -65,13 +67,19 @@ namespace EmployeeManagement.AppService.UsersAppServices
             }
         }
 
-        public async Task<IEnumerable<Members>> GetAllUsers()
+        public async Task<PagedList<Members>> GetAllUsers(UserParams userParams)
         {
-            try
-            {
+           
                 var userList = await _userRepo.GetAllUsers();
 
-                var listResults = userList.AsQueryable().Select(s => new Members
+                var minDob = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+                var maxDob = DateTime.Today.AddYears(-userParams.MinAge);
+
+                var filter = userList.AsQueryable().Where(x => x.Name != userParams.CurrentUserName & 
+                x.Gender == userParams.Gender & (x.DateOfBirth >= minDob & x.DateOfBirth <= maxDob));
+
+             
+                var listResults = filter.Select(s => new Members
                 {
                     Id = s.Id,
                     Name = s.Name,
@@ -89,14 +97,19 @@ namespace EmployeeManagement.AppService.UsersAppServices
                     PhotoUrl = GetPhotoUrl(s.Id),
                     Photo =  this.GetUserPhotos(s.Id).ToList(),
                     
-                }).ToList();
+                });
 
-                return listResults;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+                //new switch expression from c# 8 upward
+                listResults = userParams.OrderBy switch
+                {
+                    "created" => listResults.OrderByDescending(u => u.DateCreated), 
+                    _ => listResults.OrderByDescending(u => u.LastAcvtive)
+                };
+
+                var memberList = await PagedList<Members>.CreateAsync(listResults, userParams.PageNumber, userParams.PageSize);
+
+                return memberList;
+           
         }
 
         public async Task<Members> GetUsersById(int id)
@@ -156,12 +169,55 @@ namespace EmployeeManagement.AppService.UsersAppServices
            
         }
 
+        public async Task<long> Like(int userId, int likedBy)
+        {
+            var userLike = new UserLike
+            {
+                LikedBy = likedBy,
+                UserId = userId
+            };
+
+            var like = await _userRepo.Like(userLike);
+            return like;
+        }
+
+        public async Task<List<LikeDto>> GetUserLikes(string predicate, int id)
+        {
+            var users = await _userRepo.GetUserLikes(predicate, id);
+            var userLikes = users.Select(user => new LikeDto
+            {
+                UserName = user.Name,
+                Age = user.Age,
+                KnownAs = user.KnownAs,
+                PhotoUrl = GetPhotoUrl(user.Id),
+                Id = user.Id,
+                City = user.City
+            }).ToList();
+
+            return userLikes;
+        }
+
+        //this returns the user that has liked another user
+        public async Task<Users> GetUserWithLike(int id)
+        {
+            return await _userRepo.GetUserWithLike(id);
+        }
+
+        public async Task<UserLike> GetUserLike(int userId, int likeById)
+        {
+            return await _userRepo.GetUserLike(userId, likeById);
+        }
+
 
         #region Helper methods
         public string GetPhotoUrl(int id)
         {
             var photo = this.GetMainPhotoByUserId(id);
-            return photo.Result.Url;
+            if (photo != null)
+            {
+                return photo.Url;
+            }
+            return null;
         }
 
         public IEnumerable<PhotoDto> GetUserPhotos(int userId)
@@ -171,11 +227,11 @@ namespace EmployeeManagement.AppService.UsersAppServices
             return photoList;
         }
 
-        public async Task<Photos> GetMainPhotoByUserId(int id)
+        public Photos GetMainPhotoByUserId(int id)
         {
             var photos = _photoRepository.GetUserPhotos(id);
             var getMainPhoto = photos.Where(r => r.IsMain == true).FirstOrDefault();
-            return await Task.FromResult(getMainPhoto);
+            return getMainPhoto;
 
         }
 

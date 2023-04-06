@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagement.Api.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class RegisteredUsersController : BaseController
     {
         private readonly IRegistrationAppServices _registrationAppServices;

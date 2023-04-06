@@ -2,11 +2,9 @@
 using EmployeeManagement.Core;
 using EmployeeManagement.Repository.IStorage;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EmployeeManagement.Repository.UserRepository
@@ -14,12 +12,10 @@ namespace EmployeeManagement.Repository.UserRepository
     public class UserRepo : IUserRepo
     {
         private readonly ConnectionStrings _appSettings;
-        private readonly IStorageRepo _storageRepo;
 
-        public UserRepo(IOptions<ConnectionStrings> options, IStorageRepo storageRepo)
+        public UserRepo(IOptions<ConnectionStrings> options)
         {
             _appSettings = options.Value;
-            _storageRepo = storageRepo;
         }
 
         public IDbConnection Connection
@@ -30,18 +26,84 @@ namespace EmployeeManagement.Repository.UserRepository
             }
         }
 
+        public async Task<long> Like(UserLike model)
+        {
+            using (var conn = Connection)
+            {
+                var sql = $"[dbo].[Like] @userId, @likedBy";
+                var result = await conn.ExecuteScalarAsync<long>(sql, new
+                {
+                    model.UserId,
+                    model.LikedBy
+                });
+                return result;
+            }
+        }
+
+        public async Task<UserLike> GetUserLike(int userId, int likedBy)
+        {
+            using (var conn = Connection)
+            {
+                var sql = $"[dbo].[GetUserLikeByUserIdLikedBy] @userId, @likedBy";
+                var result = await conn.QuerySingleOrDefaultAsync<UserLike>(sql, new
+                {
+                    userId,
+                    likedBy
+                });
+                return result;
+            }
+        }
+
+        public async Task<Users> GetUserWithLike(int id)
+        {
+            using (var conn = Connection)
+            {
+                var sql = $"[dbo].[GetUserWithLike] @id";
+                var result = await conn.QuerySingleOrDefaultAsync<Users>(sql, new
+                {
+                    id
+                });
+                return result;
+            }
+        }
+
+        public async Task<IEnumerable<Users>> GetUserLikes(string predicate, int id)
+        {
+            string sql = "";
+            using (var conn = Connection)
+            { 
+                if(predicate == "liked") { sql = $"[dbo].[GetAllUserLiked] @id"; }
+                if (predicate == "likedBy") { sql = $"[dbo].[GetAllUserLikedBy] @id"; }
+                var result = await conn.QueryAsync<Users>(sql, new { id });
+                return result;
+            }
+        }
+
+
+
         public async Task<long> CreateUsers(Users model)
         {
             using (var conn = Connection)
             {
-                var sql = $"[dbo].[CreateUsers] @name, @email, @passwordHash, @passwordSalt, @datecreated";
+                var sql = $"[dbo].[CreateUsers] @name, @email, @passwordHash, @passwordSalt, @datecreated, @dateofbirth, @age, @knownas, @lastActive," +
+                    $" @gender, @introduction, @lookingfor, @interests, @city";
                 var result = await conn.ExecuteScalarAsync<long>(sql, new
                 {
                     model.Name,
                     model.Email,
                     model.PasswordHash,
                     model.PasswordSalt,
-                    model.DateCreated
+                    model.DateCreated,
+                    model.DateOfBirth,
+                    model.Age,
+                    model.KnownAs,
+                    model.LastActive,
+                    model.Gender,
+                    model.Introduction,
+                    model.LookingFor,
+                    model.Interests,
+                    model.City,
+                  
                 });
                 return result;
             }
