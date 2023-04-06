@@ -7,5 +7,6 @@ namespace EmployeeManagement.Repository.Data
 {
     public class DataContext : DbContext
     {
+
     }
 }
