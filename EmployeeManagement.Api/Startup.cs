@@ -5,10 +5,12 @@ using EmployeeManagement.AppService;
 using EmployeeManagement.AppService.AutoMapper;
 using EmployeeManagement.AppService.Helpers;
 using EmployeeManagement.Repository;
+using EmployeeManagement.Repository.Data;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -31,6 +33,11 @@ namespace EmployeeManagement.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<DataContext>(opt=> 
+            {
+                opt.UseSqlServer(Configuration.GetConnectionString("EmployeeConnection"));
+            });
+
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddScoped<LogUser>();
