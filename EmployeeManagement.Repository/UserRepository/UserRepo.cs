@@ -1,10 +1,13 @@
 ﻿using Dapper;
 using EmployeeManagement.Core;
+using EmployeeManagement.Repository.Data;
 using EmployeeManagement.Repository.IStorage;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmployeeManagement.Repository.UserRepository
@@ -12,10 +15,12 @@ namespace EmployeeManagement.Repository.UserRepository
     public class UserRepo : IUserRepo
     {
         private readonly ConnectionStrings _appSettings;
+        private readonly DataContext _dataContext;
 
-        public UserRepo(IOptions<ConnectionStrings> options)
+        public UserRepo(IOptions<ConnectionStrings> options, DataContext dataContext)
         {
             _appSettings = options.Value;
+            _dataContext = dataContext;
         }
 
         public IDbConnection Connection
@@ -28,16 +33,8 @@ namespace EmployeeManagement.Repository.UserRepository
 
         public async Task<long> Like(UserLike model)
         {
-            using (var conn = Connection)
-            {
-                var sql = $"[dbo].[Like] @userId, @likedBy";
-                var result = await conn.ExecuteScalarAsync<long>(sql, new
-                {
-                    model.UserId,
-                    model.LikedBy
-                });
-                return result;
-            }
+            var userLike = await _dataContext.UserLike.AddAsync(model);
+            return userLike.Entity.Id;
         }
 
         public async Task<UserLike> GetUserLike(int userId, int likedBy)
@@ -83,94 +80,29 @@ namespace EmployeeManagement.Repository.UserRepository
 
         public async Task<long> CreateUsers(Users model)
         {
-            using (var conn = Connection)
-            {
-                var sql = $"[dbo].[CreateUsers] @name, @email, @passwordHash, @passwordSalt, @datecreated, @dateofbirth, @age, @knownas, @lastActive," +
-                    $" @gender, @introduction, @lookingfor, @interests, @city";
-                var result = await conn.ExecuteScalarAsync<long>(sql, new
-                {
-                    model.Name,
-                    model.Email,
-                    model.PasswordHash,
-                    model.PasswordSalt,
-                    model.DateCreated,
-                    model.DateOfBirth,
-                    model.Age,
-                    model.KnownAs,
-                    model.LastActive,
-                    model.Gender,
-                    model.Introduction,
-                    model.LookingFor,
-                    model.Interests,
-                    model.City,
-                  
-                });
-                return result;
-            }
+            var user = await _dataContext.Users.AddAsync(model);
+            return user.Entity.Id;
         }
 
         public async Task<IEnumerable<Users>> GetAllUsers()
         {
-            using (var conn = Connection)
-            {
-                var sql = $"[dbo].[GetAllUsers]";
-                var result = await conn.QueryAsync<Users>(sql);
-                return result;
-            }
+            return await _dataContext.Users.ToListAsync();
         }
 
         public async Task<Users> GetUserByEmail(string email)
         {
-            using (var conn = Connection)
-            {
-                var sql = $"[dbo].[GetUserByEmail] @email";
-                var result = await conn.QuerySingleOrDefaultAsync<Users>(sql, new 
-                {
-                    email
-                });
-                return result;
-            }
+            return await _dataContext.Users.FirstOrDefaultAsync(e => e.Email == email);
         }
 
         public async Task<Users> GetUsersById(int id)
         {
-            using (var conn = Connection)
-            {
-                var sql = $"[dbo].[GetUserById] @Id";
-                var result = await conn.QueryFirstOrDefaultAsync<Users>(sql, new { id });
-                return result;
-            }
+            return await _dataContext.Users.FindAsync(id);
         }
 
         public async Task<Users> UpdateUsers(Users model)
         {
-                using (var conn = Connection)
-                {
-                    var sql = $"[dbo].[UpdateUsers] @id, @name, @email, @passwordHash, @passwordSalt, @datecreated, @dateofbirth," +
-                        $"@knownas, @lastactive, @gender, @introduction, @lookingfor, @interests, @city, @age";
-                    var result = await conn.ExecuteScalarAsync<string>(sql, new
-                    {
-                        model.Id,
-                        model.Name,
-                        model.Email,
-                        model.PasswordHash,
-                        model.PasswordSalt,
-                        model.DateCreated,
-                        model.DateOfBirth,
-                        model.KnownAs,
-                        model.LastActive,
-                        model.Gender,
-                        model.Introduction,
-                        model.LookingFor,
-                        model.Interests,
-                        model.City,
-                        model.Age
-                    });
-
-                    return model;
-                }
-
-                       
+            var user = _dataContext.Users.Update(model);
+            return user.Entity;        
         }
     }
 }
